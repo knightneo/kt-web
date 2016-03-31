@@ -32,7 +32,7 @@ class Header extends React.Component {
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                          <img src="dist/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                          <img src="/bower_components/AdminLTE/dist/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
                       </div>
                       <h4>
                         Support Team
@@ -44,7 +44,7 @@ class Header extends React.Component {
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                          <img src="dist/img/user3-128x128.jpg" className="img-circle" alt="User Image" />
+                          <img src="/bower_components/AdminLTE/dist/img/user3-128x128.jpg" className="img-circle" alt="User Image" />
                       </div>
                       <h4>
                         AdminLTE Design Team
@@ -56,7 +56,7 @@ class Header extends React.Component {
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                          <img src="dist/img/user4-128x128.jpg" className="img-circle" alt="User Image" />
+                          <img src="/bower_components/AdminLTE/dist/img/user4-128x128.jpg" className="img-circle" alt="User Image" />
                       </div>
                       <h4>
                         Developers
@@ -68,7 +68,7 @@ class Header extends React.Component {
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                          <img src="dist/img/user3-128x128.jpg" className="img-circle" alt="User Image" />
+                          <img src="/bower_components/AdminLTE/dist/img/user3-128x128.jpg" className="img-circle" alt="User Image" />
                       </div>
                       <h4>
                         Sales Department
@@ -80,7 +80,7 @@ class Header extends React.Component {
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                          <img src="dist/img/user4-128x128.jpg" className="img-circle" alt="User Image" />                      </div>
+                          <img src="/bower_components/AdminLTE/dist/img/user4-128x128.jpg" className="img-circle" alt="User Image" />                      </div>
                       <h4>
                         Reviewers
                         <small><i className="fa fa-clock-o"></i> 2 days</small>
@@ -149,7 +149,7 @@ class Header extends React.Component {
                         <small className="pull-right">20%</small>
                       </h3>
                       <div className="progress xs">
-                        <div className="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <div className="progress-bar progress-bar-aqua" style={{"width" : "20%"}} role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                           <span className="sr-only">20% Complete</span>
                         </div>
                       </div>
@@ -162,7 +162,7 @@ class Header extends React.Component {
                         <small className="pull-right">40%</small>
                       </h3>
                       <div className="progress xs">
-                        <div className="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <div className="progress-bar progress-bar-green" style={{"width" : "40%"}} role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                           <span className="sr-only">40% Complete</span>
                         </div>
                       </div>
@@ -175,7 +175,7 @@ class Header extends React.Component {
                         <small className="pull-right">60%</small>
                       </h3>
                       <div className="progress xs">
-                        <div className="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <div className="progress-bar progress-bar-red" style={{"width" : "60%"}} role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                           <span className="sr-only">60% Complete</span>
                         </div>
                       </div>
@@ -188,7 +188,7 @@ class Header extends React.Component {
                         <small className="pull-right">80%</small>
                       </h3>
                       <div className="progress xs">
-                        <div className="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <div className="progress-bar progress-bar-yellow" style={{"width" : "80%"}} role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                           <span className="sr-only">80% Complete</span>
                         </div>
                       </div>
@@ -203,12 +203,12 @@ class Header extends React.Component {
           </li>
           <li className="dropdown user user-menu">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                <img src="dist/img/user2-160x160.jpg" className="user-image" alt="User Image" />
+                <img src="/bower_components/AdminLTE/dist/img/user2-160x160.jpg" className="user-image" alt="User Image" />
               <span className="hidden-xs">Alexander Pierce</span>
             </a>
             <ul className="dropdown-menu">
               <li className="user-header">
-                  <img src="dist/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                  <img src="/bower_components/AdminLTE/dist/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
 
                 <p>
                   Alexander Pierce - Web Developer

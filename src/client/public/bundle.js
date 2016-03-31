@@ -19809,7 +19809,7 @@
 	                          _react2.default.createElement(
 	                            "div",
 	                            { className: "pull-left" },
-	                            _react2.default.createElement("img", { src: "dist/img/user2-160x160.jpg", className: "img-circle", alt: "User Image" })
+	                            _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user2-160x160.jpg", className: "img-circle", alt: "User Image" })
 	                          ),
 	                          _react2.default.createElement(
 	                            "h4",
@@ -19838,7 +19838,7 @@
 	                          _react2.default.createElement(
 	                            "div",
 	                            { className: "pull-left" },
-	                            _react2.default.createElement("img", { src: "dist/img/user3-128x128.jpg", className: "img-circle", alt: "User Image" })
+	                            _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user3-128x128.jpg", className: "img-circle", alt: "User Image" })
 	                          ),
 	                          _react2.default.createElement(
 	                            "h4",
@@ -19867,7 +19867,7 @@
 	                          _react2.default.createElement(
 	                            "div",
 	                            { className: "pull-left" },
-	                            _react2.default.createElement("img", { src: "dist/img/user4-128x128.jpg", className: "img-circle", alt: "User Image" })
+	                            _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user4-128x128.jpg", className: "img-circle", alt: "User Image" })
 	                          ),
 	                          _react2.default.createElement(
 	                            "h4",
@@ -19896,7 +19896,7 @@
 	                          _react2.default.createElement(
 	                            "div",
 	                            { className: "pull-left" },
-	                            _react2.default.createElement("img", { src: "dist/img/user3-128x128.jpg", className: "img-circle", alt: "User Image" })
+	                            _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user3-128x128.jpg", className: "img-circle", alt: "User Image" })
 	                          ),
 	                          _react2.default.createElement(
 	                            "h4",
@@ -19925,7 +19925,7 @@
 	                          _react2.default.createElement(
 	                            "div",
 	                            { className: "pull-left" },
-	                            _react2.default.createElement("img", { src: "dist/img/user4-128x128.jpg", className: "img-circle", alt: "User Image" }),
+	                            _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user4-128x128.jpg", className: "img-circle", alt: "User Image" }),
 	                            "                      "
 	                          ),
 	                          _react2.default.createElement(
@@ -20097,7 +20097,7 @@
 	                            { className: "progress xs" },
 	                            _react2.default.createElement(
 	                              "div",
-	                              { className: "progress-bar progress-bar-aqua", style: "width: 20%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              { className: "progress-bar progress-bar-aqua", style: { "width": "20%" }, role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
 	                              _react2.default.createElement(
 	                                "span",
 	                                { className: "sr-only" },
@@ -20128,7 +20128,7 @@
 	                            { className: "progress xs" },
 	                            _react2.default.createElement(
 	                              "div",
-	                              { className: "progress-bar progress-bar-green", style: "width: 40%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              { className: "progress-bar progress-bar-green", style: { "width": "40%" }, role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
 	                              _react2.default.createElement(
 	                                "span",
 	                                { className: "sr-only" },
@@ -20159,7 +20159,7 @@
 	                            { className: "progress xs" },
 	                            _react2.default.createElement(
 	                              "div",
-	                              { className: "progress-bar progress-bar-red", style: "width: 60%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              { className: "progress-bar progress-bar-red", style: { "width": "60%" }, role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
 	                              _react2.default.createElement(
 	                                "span",
 	                                { className: "sr-only" },
@@ -20190,7 +20190,7 @@
 	                            { className: "progress xs" },
 	                            _react2.default.createElement(
 	                              "div",
-	                              { className: "progress-bar progress-bar-yellow", style: "width: 80%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              { className: "progress-bar progress-bar-yellow", style: { "width": "80%" }, role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
 	                              _react2.default.createElement(
 	                                "span",
 	                                { className: "sr-only" },
@@ -20219,7 +20219,7 @@
 	                _react2.default.createElement(
 	                  "a",
 	                  { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
-	                  _react2.default.createElement("img", { src: "dist/img/user2-160x160.jpg", className: "user-image", alt: "User Image" }),
+	                  _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user2-160x160.jpg", className: "user-image", alt: "User Image" }),
 	                  _react2.default.createElement(
 	                    "span",
 	                    { className: "hidden-xs" },
@@ -20232,7 +20232,7 @@
 	                  _react2.default.createElement(
 	                    "li",
 	                    { className: "user-header" },
-	                    _react2.default.createElement("img", { src: "dist/img/user2-160x160.jpg", className: "img-circle", alt: "User Image" }),
+	                    _react2.default.createElement("img", { src: "/bower_components/AdminLTE/dist/img/user2-160x160.jpg", className: "img-circle", alt: "User Image" }),
 	                    _react2.default.createElement(
 	                      "p",
 	                      null,
