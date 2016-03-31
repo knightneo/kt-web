@@ -54,9 +54,9 @@
 
 	var _reactDom = __webpack_require__(158);
 
-	var _AwesomeComponent = __webpack_require__(159);
+	var _Header = __webpack_require__(159);
 
-	var _AwesomeComponent2 = _interopRequireDefault(_AwesomeComponent);
+	var _Header2 = _interopRequireDefault(_Header);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -78,16 +78,7 @@
 	    _createClass(App, [{
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'hello'
-	                ),
-	                _react2.default.createElement(_AwesomeComponent2.default, null)
-	            );
+	            return _react2.default.createElement(_Header2.default, null);
 	        }
 	    }]);
 
@@ -19705,10 +19696,10 @@
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19725,54 +19716,613 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var AwesomeComponent = function (_React$Component) {
-	    _inherits(AwesomeComponent, _React$Component);
+	var Header = function (_React$Component) {
+	  _inherits(Header, _React$Component);
 
-	    function AwesomeComponent(props) {
-	        _classCallCheck(this, AwesomeComponent);
+	  function Header(props) {
+	    _classCallCheck(this, Header);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AwesomeComponent).call(this, props));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Header).call(this, props));
+	  }
 
-	        _this.state = { likesCount: 0 };
-	        _this.onLike = _this.onLike.bind(_this);
-	        return _this;
-	    }
-
-	    _createClass(AwesomeComponent, [{
-	        key: 'onLike',
-	        value: function onLike() {
-	            var newLikesCount = this.state.likesCount + 1;
-	            this.setState({ likesCount: newLikesCount });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                'Likes: ',
+	  _createClass(Header, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "header",
+	        { className: "main-header" },
+	        _react2.default.createElement(
+	          "a",
+	          { href: "index2.html", className: "logo" },
+	          _react2.default.createElement(
+	            "span",
+	            { className: "logo-mini" },
+	            _react2.default.createElement(
+	              "b",
+	              null,
+	              "A"
+	            ),
+	            "LT"
+	          ),
+	          _react2.default.createElement(
+	            "span",
+	            { className: "logo-lg" },
+	            _react2.default.createElement(
+	              "b",
+	              null,
+	              "Admin"
+	            ),
+	            "LTE"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "nav",
+	          { className: "navbar navbar-static-top" },
+	          _react2.default.createElement(
+	            "a",
+	            { href: "#", className: "sidebar-toggle", "data-toggle": "offcanvas", role: "button" },
+	            _react2.default.createElement(
+	              "span",
+	              { className: "sr-only" },
+	              "Toggle navigation"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "navbar-custom-menu" },
+	            _react2.default.createElement(
+	              "ul",
+	              { className: "nav navbar-nav" },
+	              _react2.default.createElement(
+	                "li",
+	                { className: "dropdown messages-menu" },
 	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    this.state.likesCount
+	                  "a",
+	                  { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
+	                  _react2.default.createElement("i", { className: "fa fa-envelope-o" }),
+	                  _react2.default.createElement(
+	                    "span",
+	                    { className: "label label-success" },
+	                    "4"
+	                  )
 	                ),
 	                _react2.default.createElement(
-	                    'div',
+	                  "ul",
+	                  { className: "dropdown-menu" },
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "header" },
+	                    "You have 4 messages"
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
 	                    null,
 	                    _react2.default.createElement(
-	                        'button',
-	                        { onClick: this.onLike },
-	                        'Like Me'
+	                      "ul",
+	                      { className: "menu" },
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "pull-left" },
+	                            _react2.default.createElement("img", { src: "dist/img/user2-160x160.jpg", className: "img-circle", alt: "User Image" })
+	                          ),
+	                          _react2.default.createElement(
+	                            "h4",
+	                            null,
+	                            "Support Team",
+	                            _react2.default.createElement(
+	                              "small",
+	                              null,
+	                              _react2.default.createElement("i", { className: "fa fa-clock-o" }),
+	                              " 5 mins"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "p",
+	                            null,
+	                            "Why not buy a new awesome theme?"
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "pull-left" },
+	                            _react2.default.createElement("img", { src: "dist/img/user3-128x128.jpg", className: "img-circle", alt: "User Image" })
+	                          ),
+	                          _react2.default.createElement(
+	                            "h4",
+	                            null,
+	                            "AdminLTE Design Team",
+	                            _react2.default.createElement(
+	                              "small",
+	                              null,
+	                              _react2.default.createElement("i", { className: "fa fa-clock-o" }),
+	                              " 2 hours"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "p",
+	                            null,
+	                            "Why not buy a new awesome theme?"
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "pull-left" },
+	                            _react2.default.createElement("img", { src: "dist/img/user4-128x128.jpg", className: "img-circle", alt: "User Image" })
+	                          ),
+	                          _react2.default.createElement(
+	                            "h4",
+	                            null,
+	                            "Developers",
+	                            _react2.default.createElement(
+	                              "small",
+	                              null,
+	                              _react2.default.createElement("i", { className: "fa fa-clock-o" }),
+	                              " Today"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "p",
+	                            null,
+	                            "Why not buy a new awesome theme?"
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "pull-left" },
+	                            _react2.default.createElement("img", { src: "dist/img/user3-128x128.jpg", className: "img-circle", alt: "User Image" })
+	                          ),
+	                          _react2.default.createElement(
+	                            "h4",
+	                            null,
+	                            "Sales Department",
+	                            _react2.default.createElement(
+	                              "small",
+	                              null,
+	                              _react2.default.createElement("i", { className: "fa fa-clock-o" }),
+	                              " Yesterday"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "p",
+	                            null,
+	                            "Why not buy a new awesome theme?"
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "pull-left" },
+	                            _react2.default.createElement("img", { src: "dist/img/user4-128x128.jpg", className: "img-circle", alt: "User Image" }),
+	                            "                      "
+	                          ),
+	                          _react2.default.createElement(
+	                            "h4",
+	                            null,
+	                            "Reviewers",
+	                            _react2.default.createElement(
+	                              "small",
+	                              null,
+	                              _react2.default.createElement("i", { className: "fa fa-clock-o" }),
+	                              " 2 days"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "p",
+	                            null,
+	                            "Why not buy a new awesome theme?"
+	                          )
+	                        )
+	                      )
 	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "footer" },
+	                    _react2.default.createElement(
+	                      "a",
+	                      { href: "#" },
+	                      "See All Messages"
+	                    )
+	                  )
 	                )
-	            );
-	        }
-	    }]);
+	              ),
+	              _react2.default.createElement(
+	                "li",
+	                { className: "dropdown notifications-menu" },
+	                _react2.default.createElement(
+	                  "a",
+	                  { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
+	                  _react2.default.createElement("i", { className: "fa fa-bell-o" }),
+	                  _react2.default.createElement(
+	                    "span",
+	                    { className: "label label-warning" },
+	                    "10"
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  "ul",
+	                  { className: "dropdown-menu" },
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "header" },
+	                    "You have 10 notifications"
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    null,
+	                    _react2.default.createElement(
+	                      "ul",
+	                      { className: "menu" },
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement("i", { className: "fa fa-users text-aqua" }),
+	                          " 5 new members joined today"
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement("i", { className: "fa fa-warning text-yellow" }),
+	                          " Very long description here that may not fit into the page and may cause design problems"
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement("i", { className: "fa fa-users text-red" }),
+	                          " 5 new members joined"
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement("i", { className: "fa fa-shopping-cart text-green" }),
+	                          " 25 sales made"
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement("i", { className: "fa fa-user text-red" }),
+	                          " You changed your username"
+	                        )
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "footer" },
+	                    _react2.default.createElement(
+	                      "a",
+	                      { href: "#" },
+	                      "View all"
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "li",
+	                { className: "dropdown tasks-menu" },
+	                _react2.default.createElement(
+	                  "a",
+	                  { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
+	                  _react2.default.createElement("i", { className: "fa fa-flag-o" }),
+	                  _react2.default.createElement(
+	                    "span",
+	                    { className: "label label-danger" },
+	                    "9"
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  "ul",
+	                  { className: "dropdown-menu" },
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "header" },
+	                    "You have 9 tasks"
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    null,
+	                    _react2.default.createElement(
+	                      "ul",
+	                      { className: "menu" },
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Design some buttons",
+	                            _react2.default.createElement(
+	                              "small",
+	                              { className: "pull-right" },
+	                              "20%"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "progress xs" },
+	                            _react2.default.createElement(
+	                              "div",
+	                              { className: "progress-bar progress-bar-aqua", style: "width: 20%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              _react2.default.createElement(
+	                                "span",
+	                                { className: "sr-only" },
+	                                "20% Complete"
+	                              )
+	                            )
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Create a nice theme",
+	                            _react2.default.createElement(
+	                              "small",
+	                              { className: "pull-right" },
+	                              "40%"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "progress xs" },
+	                            _react2.default.createElement(
+	                              "div",
+	                              { className: "progress-bar progress-bar-green", style: "width: 40%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              _react2.default.createElement(
+	                                "span",
+	                                { className: "sr-only" },
+	                                "40% Complete"
+	                              )
+	                            )
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Some task I need to do",
+	                            _react2.default.createElement(
+	                              "small",
+	                              { className: "pull-right" },
+	                              "60%"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "progress xs" },
+	                            _react2.default.createElement(
+	                              "div",
+	                              { className: "progress-bar progress-bar-red", style: "width: 60%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              _react2.default.createElement(
+	                                "span",
+	                                { className: "sr-only" },
+	                                "60% Complete"
+	                              )
+	                            )
+	                          )
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "li",
+	                        null,
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Make beautiful transitions",
+	                            _react2.default.createElement(
+	                              "small",
+	                              { className: "pull-right" },
+	                              "80%"
+	                            )
+	                          ),
+	                          _react2.default.createElement(
+	                            "div",
+	                            { className: "progress xs" },
+	                            _react2.default.createElement(
+	                              "div",
+	                              { className: "progress-bar progress-bar-yellow", style: "width: 80%", role: "progressbar", "aria-valuenow": "20", "aria-valuemin": "0", "aria-valuemax": "100" },
+	                              _react2.default.createElement(
+	                                "span",
+	                                { className: "sr-only" },
+	                                "80% Complete"
+	                              )
+	                            )
+	                          )
+	                        )
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "footer" },
+	                    _react2.default.createElement(
+	                      "a",
+	                      { href: "#" },
+	                      "View all tasks"
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "li",
+	                { className: "dropdown user user-menu" },
+	                _react2.default.createElement(
+	                  "a",
+	                  { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown" },
+	                  _react2.default.createElement("img", { src: "dist/img/user2-160x160.jpg", className: "user-image", alt: "User Image" }),
+	                  _react2.default.createElement(
+	                    "span",
+	                    { className: "hidden-xs" },
+	                    "Alexander Pierce"
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  "ul",
+	                  { className: "dropdown-menu" },
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "user-header" },
+	                    _react2.default.createElement("img", { src: "dist/img/user2-160x160.jpg", className: "img-circle", alt: "User Image" }),
+	                    _react2.default.createElement(
+	                      "p",
+	                      null,
+	                      "Alexander Pierce - Web Developer",
+	                      _react2.default.createElement(
+	                        "small",
+	                        null,
+	                        "Member since Nov. 2012"
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "user-body" },
+	                    _react2.default.createElement(
+	                      "div",
+	                      { className: "row" },
+	                      _react2.default.createElement(
+	                        "div",
+	                        { className: "col-xs-4 text-center" },
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          "Followers"
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "div",
+	                        { className: "col-xs-4 text-center" },
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          "Sales"
+	                        )
+	                      ),
+	                      _react2.default.createElement(
+	                        "div",
+	                        { className: "col-xs-4 text-center" },
+	                        _react2.default.createElement(
+	                          "a",
+	                          { href: "#" },
+	                          "Friends"
+	                        )
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    "li",
+	                    { className: "user-footer" },
+	                    _react2.default.createElement(
+	                      "div",
+	                      { className: "pull-left" },
+	                      _react2.default.createElement(
+	                        "a",
+	                        { href: "#", className: "btn btn-default btn-flat" },
+	                        "Profile"
+	                      )
+	                    ),
+	                    _react2.default.createElement(
+	                      "div",
+	                      { className: "pull-right" },
+	                      _react2.default.createElement(
+	                        "a",
+	                        { href: "#", className: "btn btn-default btn-flat" },
+	                        "Sign out"
+	                      )
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "li",
+	                null,
+	                _react2.default.createElement(
+	                  "a",
+	                  { href: "#", "data-toggle": "control-sidebar" },
+	                  _react2.default.createElement("i", { className: "fa fa-gears" })
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
 
-	    return AwesomeComponent;
+	  return Header;
 	}(_react2.default.Component);
 
-	exports.default = AwesomeComponent;
+	exports.default = Header;
 
 /***/ }
 /******/ ]);
