@@ -1,0 +1,17 @@
+server {
+    listen 80;
+	server_name web.kt.com;
+    
+    location / {
+        root /home/knightneo/Project/kt-web;
+        index index.html index.htm;
+    }
+
+    access_log /home/knightneo/logs/kt-web/access.log;
+    error_log /home/knightneo/logs/kt-web/error.log;
+
+#error_page 500 502 503 504 /50x.html;
+#location = /50x.html {
+#root /usr/share/nginx/html;
+#}
+}
