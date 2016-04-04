@@ -42,7 +42,7 @@ class App extends React.Component {
     render() {
         return (
             <div className="hold-trasition skin-blue sidebar-mini">
-                <Header isLogin={true} />
+                <Header isLogin={false} />
                 <LeftSide />
                 <div className="content-wrapper">
                     <section className="content" id="content">
