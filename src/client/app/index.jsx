@@ -11,8 +11,20 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        var strCookie=document.cookie; 
+        var arrCookie=strCookie.split("; "); 
+        var found_token = false;
+        for(var i=0;i<arrCookie.length;i++){ 
+            var arr=arrCookie[i].split("="); 
+            if("kt_access_token"==arr[0] && arr[1].length > 0){ 
+                this.state.access_token=arr[1]; 
+                found_token = true;
+                break; 
+            } 
+        } 
+        this.state.isLogin = found_token;
         this.getContent = this.getContent.bind(this);
-    };
+    }
 
     getContent() {
         switch (this.state.url) {
@@ -25,7 +37,7 @@ class App extends React.Component {
             default:
                 return (<Home />);
         }
-    };
+    }
 
     jump(url, data, open_new) {
         var hash = url + '?';
@@ -37,12 +49,12 @@ class App extends React.Component {
         } else {
             this.setState({url: url,data: data}, function(){location.hash = hash;});
         }
-    };
+    }
 
     render() {
         return (
             <div className="hold-trasition skin-blue sidebar-mini">
-                <Header isLogin={false} />
+                <Header isLogin={this.state.isLogin} token={this.state.isLogin? this.state.access_token : ''} />
                 <LeftSide />
                 <div className="content-wrapper">
                     <section className="content" id="content">
@@ -52,7 +64,7 @@ class App extends React.Component {
                 <div className="control-sidebar-bg"></div>
             </div>
         );
-    };
+    }
 }
 
 var AppDom = render(<App/>, document.getElementById('app'));

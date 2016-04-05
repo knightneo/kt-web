@@ -12,7 +12,7 @@ class Header extends React.Component {
     userInfo() {
         if (this.props.isLogin) {
             return (
-                <UserHeader />
+                <UserHeader token={this.props.token}/>
             );
         }else {
             return (
@@ -24,7 +24,7 @@ class Header extends React.Component {
     render() {
         return (
             <header className="main-header">
-                <a href="/bower_components/index2.html" className="logo">
+                <a href="#" className="logo">
                     <span className="logo-mini"><b>KT</b></span>
                     <span className="logo-lg"><b>KT</b></span>
                 </a>
