@@ -36,29 +36,13 @@ class GuestHeader extends React.Component {
         var credentials = {};
         credentials.email = this.state.email;
         credentials.password = this.state.password;
-        console.log(credentials);
-        $.ajax({
-            url: 'http://knightneo.kt.com/signin',
-            method: 'post',
-            /*
-            beforeSend: function (request) {
-                request.setRequestHeader({
-                    'Access-Control-Allow-Origin' : 'http://knightneo.kt.com',
-                    'Access-Control-Allow-Headers' : 'x-Requested-with',
-                });
-            },
-            headers:{
-                'Access-Control-Allow-Origin' : 'http://knightneo.kt.com',
-                'Access-Control-Allow-Headers' : 'x-Requested-with',
-            },
-            */
-            data: credentials,
-            success: function (data) {
-                console.log(data);
-                document.cookie = 'kt_access_token=' + data.token;
-                location.reload();
-            }
-        });
+        var result = ajaxPost('signin', credentials);
+        if (result.success) {
+            storeTokenIntoCookie(result.data.token);
+        } else {
+            console.log(result.error);
+        }
+        location.reload();
     }
 
     render() {

@@ -3,37 +3,54 @@ import {render} from 'react-dom';
 import Header from './header.jsx';
 import LeftSide from './left_side.jsx';
 import Home from './home.jsx';
+import Writer from './writer.jsx';
 import Like from './like.jsx';
 import Login from './login.jsx';
+import Editor from './editor.jsx';
+import ArticleReader from './article_reader.jsx';
 
 class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {};
-        var strCookie=document.cookie; 
-        var arrCookie=strCookie.split("; "); 
-        var found_token = false;
-        for(var i=0;i<arrCookie.length;i++){ 
-            var arr=arrCookie[i].split("="); 
-            if("kt_access_token"==arr[0] && arr[1].length > 0){ 
-                this.state.access_token=arr[1]; 
-                found_token = true;
-                break; 
-            } 
-        } 
-        this.state.isLogin = found_token;
+        var token = getTokenFromCookie();
+        if (token == '') {
+            this.state.isLogin = false;
+        } else {
+            this.state.isLogin = true;
+            this.state.access_token = token;
+        }
         this.getContent = this.getContent.bind(this);
     }
 
     getContent() {
         switch (this.state.url) {
+            case '':
+                console.log(this.state);
             case 'home':
-                return (<Home />);
+                console.log('found home');
+                var page = 1;
+                if (this.state.data.page != undefined) {
+                    page = this.state.data.page;
+                }
+                return (<Home page={page} />);
             case 'like':
                 return (<Like />);
-            case 'login':
-                return (<Login />);
+            case 'writer':
+                var page = 1;
+                console.log('found writer');
+                if (this.state.data.page != undefined) {
+                    page = this.state.data.page;
+                }
+                return (<Writer page={page} />);
+            case 'editor':
+                return (<Editor />);
+            case 'article':
+                var article_id = this.state.data.article;
+                var from = this.state.data.from;
+                var page = this.state.data.page;
+                return (<ArticleReader article={article_id} from={from} page={page}/>);
             default:
                 return (<Home />);
         }
@@ -47,7 +64,7 @@ class App extends React.Component {
         if (open_new) {
             window.open('/react/#' + hash);
         } else {
-            this.setState({url: url,data: data}, function(){location.hash = hash;});
+            this.setState({url: url,data: data}, function(){document.location.hash = hash;});
         }
     }
 

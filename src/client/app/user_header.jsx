@@ -12,24 +12,19 @@ class UserHeader extends React.Component {
     }
 
     logout() {
-        document.cookie = 'kt_access_token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        deleteTokenFromCookie();
         location.reload();
     }
 
     getProfile() {
-        var access_token = 'Bearer{' + this.state.token + '}';
-        var user;
-        $.ajax({
-            url: 'http://knightneo.kt.com/profile',
-            beforeSend: function (request) {
-                request.setRequestHeader('Authorization', access_token);
-            },
-            async: false,
-            success: function (data) {
-                user = data.user;
-            }
-        });
-        return user;
+        var result = ajaxGetWithToken('profile');
+        if (result.success) {
+            console.log(result.data);
+            return result.data.user;
+        } else {
+            console.log(result.error);
+            deleteTokenFromCookie();
+        }
     }
 
     render() {
