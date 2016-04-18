@@ -86,6 +86,10 @@
 
 	var _article_reader2 = _interopRequireDefault(_article_reader);
 
+	var _user_list = __webpack_require__(192);
+
+	var _user_list2 = _interopRequireDefault(_user_list);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -103,6 +107,11 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
 	        _this.state = {};
+	        _this.state.main = 'home';
+	        _this.state.page = 1;
+	        _this.state.user = {};
+	        _this.state.role = 'reader';
+	        _this.state.permissions = ['read'];
 	        var token = getTokenFromCookie();
 	        if (token == '') {
 	            _this.state.isLogin = false;
@@ -110,66 +119,74 @@
 	            _this.state.isLogin = true;
 	            _this.state.access_token = token;
 	        }
+	        _this.onMainChange = _this.onMainChange.bind(_this);
 	        _this.getContent = _this.getContent.bind(_this);
+	        _this.setProfile = _this.setProfile.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(App, [{
-	        key: 'getContent',
-	        value: function getContent() {
-	            switch (this.state.url) {
-	                case '':
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {}
+	    }, {
+	        key: 'setProfile',
+	        value: function setProfile(profile) {
+	            if (this.state.isLogin) {
+	                var permissions = [];
+	                for (var i = 0; i < profile.permission.length; i++) {
+	                    permissions.push(profile.permission[i].permission_name);
+	                }
+	                this.setState({
+	                    user: profile.user,
+	                    role: profile.role.name,
+	                    permissions: permissions
+	                }, function () {
 	                    console.log(this.state);
-	                case 'home':
-	                    console.log('found home');
-	                    var page = 1;
-	                    if (this.state.data.page != undefined) {
-	                        page = this.state.data.page;
-	                    }
-	                    return _react2.default.createElement(_home2.default, { page: page });
-	                case 'like':
-	                    return _react2.default.createElement(_like2.default, null);
-	                case 'writer':
-	                    var page = 1;
-	                    console.log('found writer');
-	                    if (this.state.data.page != undefined) {
-	                        page = this.state.data.page;
-	                    }
-	                    return _react2.default.createElement(_writer2.default, { page: page });
-	                case 'editor':
-	                    return _react2.default.createElement(_editor2.default, null);
-	                case 'article':
-	                    var article_id = this.state.data.article;
-	                    var from = this.state.data.from;
-	                    var page = this.state.data.page;
-	                    return _react2.default.createElement(_article_reader2.default, { article: article_id, from: from, page: page });
-	                default:
-	                    return _react2.default.createElement(_home2.default, null);
+	                });
 	            }
 	        }
 	    }, {
-	        key: 'jump',
-	        value: function jump(url, data, open_new) {
-	            var hash = url + '?';
-	            for (var key in data) {
-	                hash += (hash == url + '?' ? '' : '&') + key + '=' + data[key];
-	            }
-	            if (open_new) {
-	                window.open('/react/#' + hash);
-	            } else {
-	                this.setState({ url: url, data: data }, function () {
-	                    document.location.hash = hash;
-	                });
+	        key: 'onMainChange',
+	        value: function onMainChange(nextPage) {
+	            console.log(nextPage);
+	            this.setState(nextPage, function () {
+	                console.log(this.state);
+	            });
+	        }
+	    }, {
+	        key: 'getContent',
+	        value: function getContent() {
+	            console.log(this.state);
+	            switch (this.state.main) {
+	                case '':
+	                    console.log(this.state);
+	                case 'home':
+	                    return _react2.default.createElement(_home2.default, { page: this.state.page, callbackParent: this.onMainChange });
+	                case 'article':
+	                    var article_id = this.state.page;
+	                    var from = this.state.from;
+	                    return _react2.default.createElement(_article_reader2.default, { article: article_id, from: from, callbackParent: this.onMainChange });
+	                case 'writer':
+	                    return _react2.default.createElement(_writer2.default, { page: this.state.page, callbackParent: this.onMainChange });
+	                case 'editor':
+	                    var article_id = this.state.page;
+	                    var from = this.state.from;
+	                    return _react2.default.createElement(_editor2.default, { page: this.state.page, from: from, callbackParent: this.onMainChange });
+	                case 'user_list':
+	                    return _react2.default.createElement(_user_list2.default, { page: this.state.page, user: this.state.user });
+	                default:
+	                    return _react2.default.createElement(_home2.default, { page: this.state.page });
 	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            console.log(this.state);
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'hold-trasition skin-blue sidebar-mini' },
-	                _react2.default.createElement(_header2.default, { isLogin: this.state.isLogin, token: this.state.isLogin ? this.state.access_token : '' }),
-	                _react2.default.createElement(_left_side2.default, null),
+	                _react2.default.createElement(_header2.default, { isLogin: this.state.isLogin, token: this.state.isLogin ? this.state.access_token : '', callbackParent: this.setProfile }),
+	                _react2.default.createElement(_left_side2.default, { current: { main: this.state.main }, callbackParent: this.onMainChange, permissions: this.state.permissions }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'content-wrapper' },
@@ -188,21 +205,6 @@
 	}(_react2.default.Component);
 
 	var AppDom = (0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById('app'));
-
-	window.addEventListener('hashchange', function (e) {
-	    if (AppDom.state.url != location.hash.substr(1).split('?')[0]) {
-	        var url = location.hash.split('?')[0].substring(1);
-	        var params = location.hash.split('?')[1] ? location.hash.split('?')[1].split('&') : null;
-	        var data = {};
-	        for (var i in params) {
-	            data[params[i].split('=')[0]] = params[i].split('=')[1];
-	        }
-	        AppDom.setState({
-	            url: url,
-	            data: data
-	        });
-	    }
-	}.bind(undefined));
 
 /***/ },
 /* 1 */
@@ -19850,14 +19852,20 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Header).call(this, props));
 
 	        _this.userInfo = _this.userInfo.bind(_this);
+	        _this.callbackParent = _this.callbackParent.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(Header, [{
+	        key: 'callbackParent',
+	        value: function callbackParent(profile) {
+	            this.props.callbackParent(profile);
+	        }
+	    }, {
 	        key: 'userInfo',
 	        value: function userInfo() {
 	            if (this.props.isLogin) {
-	                return _react2.default.createElement(_user_header2.default, { token: this.props.token });
+	                return _react2.default.createElement(_user_header2.default, { token: this.props.token, callbackParent: this.callbackParent });
 	            } else {
 	                return _react2.default.createElement(_guest_header2.default, null);
 	            }
@@ -22114,7 +22122,9 @@
 	        _this.state.token = _this.props.token;
 	        _this.logout = _this.logout.bind(_this);
 	        _this.getProfile = _this.getProfile.bind(_this);
-	        _this.state.user = _this.getProfile();
+	        var profile = _this.getProfile();
+	        _this.state.user = profile.user;
+	        _this.props.callbackParent(profile);
 	        return _this;
 	    }
 
@@ -22130,7 +22140,7 @@
 	            var result = ajaxGetWithToken('profile');
 	            if (result.success) {
 	                console.log(result.data);
-	                return result.data.user;
+	                return result.data;
 	            } else {
 	                console.log(result.error);
 	                deleteTokenFromCookie();
@@ -22247,18 +22257,79 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LeftSide).call(this, props));
 
-	        _this.closeSideBar = _this.closeSideBar.bind(_this);
+	        _this.state = {};
+	        _this.state.current = _this.props.current;
+	        _this.onMainChange = _this.onMainChange.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(LeftSide, [{
-	        key: 'closeSideBar',
-	        value: function closeSideBar() {
+	        key: 'onMainChange',
+	        value: function onMainChange(e) {
+	            var nextPage = {};
+	            nextPage.main = 'home';
+	            nextPage.page = 1;
+	            switch (e.target.name) {
+	                case 'home':
+	                    nextPage.main = 'home';
+	                    break;
+	                case 'writer':
+	                    nextPage.main = 'writer';
+	                    break;
+	                case 'user_list':
+	                    nextPage.main = 'user_list';
+	                    break;
+	                default:
+	                    nextPage.main = 'home';
+	            }
+	            this.setState({ current: nextPage }, function () {
+	                this.props.callbackParent(this.state.current);
+	            });
 	            $('body').removeClass('sidebar-open');
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var permissions = this.props.permissions;
+	            var items = [];
+	            for (var i = 0; i < permissions.length; i++) {
+	                switch (permissions[i]) {
+	                    case 'read':
+	                        items.push(_react2.default.createElement(
+	                            'li',
+	                            { key: i },
+	                            _react2.default.createElement(
+	                                'a',
+	                                { name: 'read', className: 'ajax-link', onClick: this.onMainChange },
+	                                'Home'
+	                            )
+	                        ));
+	                        break;
+	                    case 'write':
+	                        items.push(_react2.default.createElement(
+	                            'li',
+	                            { key: i },
+	                            _react2.default.createElement(
+	                                'a',
+	                                { name: 'writer', className: 'ajax-link', onClick: this.onMainChange },
+	                                'MyArticle'
+	                            )
+	                        ));
+	                        break;
+	                    case 'user':
+	                        items.push(_react2.default.createElement(
+	                            'li',
+	                            { key: i },
+	                            _react2.default.createElement(
+	                                'a',
+	                                { name: 'user_list', className: 'ajax-link', onClick: this.onMainChange },
+	                                'User List'
+	                            )
+	                        ));
+	                        break;
+	                    default:
+	                }
+	            }
 	            return _react2.default.createElement(
 	                'aside',
 	                { className: 'main-sidebar' },
@@ -22268,24 +22339,7 @@
 	                    _react2.default.createElement(
 	                        'ul',
 	                        { className: 'sidebar-menu' },
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement(
-	                                'a',
-	                                { className: 'ajax-link', href: '#home', onClick: this.closeSideBar },
-	                                'home'
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement(
-	                                'a',
-	                                { className: 'ajax-link', href: '#writer', onClick: this.closeSideBar },
-	                                'writer'
-	                            )
-	                        )
+	                        items
 	                    )
 	                )
 	            );
@@ -22340,12 +22394,9 @@
 	        _this.state = {};
 	        _this.state.list = [];
 	        _this.state.number = 0;
-	        if (_this.props.page == undefined) {
-	            _this.state.current = 1;
-	        } else {
-	            _this.state.current = _this.props.page;
-	        }
+	        _this.state.current = _this.props.page;
 	        _this.onPageChange = _this.onPageChange.bind(_this);
+	        _this.openArticle = _this.openArticle.bind(_this);
 
 	        var result = ajaxGet('home/article_list/' + _this.state.current);
 	        if (result.success) {
@@ -22361,23 +22412,26 @@
 
 	    _createClass(Home, [{
 	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            document.location.hash = '#home?page=' + this.state.current;
-	            console.log('home mount');
-	        }
+	        value: function componentDidMount() {}
 	    }, {
 	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate() {
-	            document.location.hash = '#home?page=' + this.state.current;
-	            console.log(document.location.hash);
-	            console.log('home update');
+	        value: function componentDidUpdate() {}
+	    }, {
+	        key: 'openArticle',
+	        value: function openArticle(article_id) {
+	            var nextPage = {};
+	            nextPage.main = 'article';
+	            nextPage.page = article_id;
+	            nextPage.from = {};
+	            nextPage.from.main = 'home';
+	            nextPage.from.page = this.state.current;
+	            this.props.callbackParent(nextPage);
 	        }
 	    }, {
 	        key: 'onPageChange',
 	        value: function onPageChange(currentPage) {
 	            this.setState({ current: currentPage }, function () {
 	                var result = ajaxGet('home/article_list/' + currentPage);
-	                document.location.hash = '#home?page=' + this.state.current;
 	                if (result.success) {
 	                    this.setState({
 	                        list: result.data.list,
@@ -22385,7 +22439,7 @@
 	                    });
 	                    console.log(result.data);
 	                } else {
-	                    //console.log(result.error);
+	                    console.log(result.error);
 	                }
 	            });
 	        }
@@ -22400,7 +22454,7 @@
 	                returnArr.push(_react2.default.createElement(
 	                    'li',
 	                    { key: title.id },
-	                    _react2.default.createElement(_title2.default, { title: title, from: 'home', page: this.state.current, total: this.state.number })
+	                    _react2.default.createElement(_title2.default, { title: title, from: 'home', page: this.state.current, total: this.state.number, callbackParent: this.openArticle })
 	                ));
 	            }
 	            return _react2.default.createElement(
@@ -22485,8 +22539,8 @@
 	            if (e.target.name == 'user') {
 	                console.log('user');
 	            } else {
+	                this.props.callbackParent(this.props.title.id);
 	                console.log('article');
-	                document.location.hash = '#article?article=' + this.props.title.id + '&from=' + this.props.from + '&page=' + this.props.page + '&total=' + this.props.total;
 	            }
 	        }
 	    }, {
@@ -22559,9 +22613,6 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Pagination).call(this, props));
 
-	        _this.state = {};
-	        _this.state.total = parseInt(_this.props.total);
-	        _this.state.current = parseInt(_this.props.current);
 	        _this.prevPage = _this.prevPage.bind(_this);
 	        _this.nextPage = _this.nextPage.bind(_this);
 	        return _this;
@@ -22571,31 +22622,24 @@
 	        key: 'prevPage',
 	        value: function prevPage() {
 	            console.log('prev');
-	            console.log(this.state);
-	            if (this.state.current > 0) {
-	                this.setState({ current: this.state.current - 1 }, function () {
-	                    //console.log(this.state);
-	                    this.props.callbackParent(this.state.current);
-	                });
+	            if (this.props.current > 0) {
+	                this.props.callbackParent(this.props.current - 1);
 	            }
 	        }
 	    }, {
 	        key: 'nextPage',
 	        value: function nextPage() {
 	            console.log('next');
-	            console.log(this.state);
-	            if (this.state.current <= this.state.total) {
-	                this.setState({ current: this.state.current + 1 }, function () {
-	                    //console.log(this.state);
-	                    this.props.callbackParent(this.state.current);
-	                });
+	            if (this.props.current <= this.props.total) {
+	                this.props.callbackParent(this.props.current + 1);
 	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            if (this.state.total == 1) {
-	                _react2.default.createElement(
+
+	            if (this.props.total <= 1) {
+	                return _react2.default.createElement(
 	                    'ul',
 	                    { className: 'pagination pagination-sm inline' },
 	                    _react2.default.createElement(
@@ -22608,7 +22652,7 @@
 	                        )
 	                    )
 	                );
-	            } else if (this.state.current == 1) {
+	            } else if (this.props.current == 1) {
 	                return _react2.default.createElement(
 	                    'ul',
 	                    { className: 'pagination pagination-sm inline' },
@@ -22631,7 +22675,7 @@
 	                        )
 	                    )
 	                );
-	            } else if (this.state.current == this.state.total) {
+	            } else if (this.props.current == this.props.total) {
 	                return _react2.default.createElement(
 	                    'ul',
 	                    { className: 'pagination pagination-sm inline' },
@@ -22650,7 +22694,7 @@
 	                        _react2.default.createElement(
 	                            'a',
 	                            { href: '#', className: 'btn-info active' },
-	                            this.state.current
+	                            this.props.current
 	                        )
 	                    )
 	                );
@@ -22673,7 +22717,7 @@
 	                        _react2.default.createElement(
 	                            'a',
 	                            { href: '#', className: 'btn-info active' },
-	                            this.state.current
+	                            this.props.current
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -22738,17 +22782,19 @@
 	        _this.state = {};
 	        _this.state.list = [];
 	        _this.state.number = 0;
-	        if (_this.props.page == undefined) {
-	            _this.state.current = 1;
-	        } else {
-	            _this.state.current = _this.props.page;
-	        }
+	        _this.state.current = _this.props.page;
 	        _this.onPageChange = _this.onPageChange.bind(_this);
+	        _this.callbackEditArticle = _this.callbackEditArticle.bind(_this);
+	        _this.callbackDeleteArticle = _this.callbackDeleteArticle.bind(_this);
+	        _this.callbackCreateArticle = _this.callbackCreateArticle.bind(_this);
 
 	        var result = ajaxGetWithToken('user/article/' + _this.state.current);
 	        if (result.success) {
 	            _this.state.list = result.data.list;
 	            _this.state.number = result.data.number;
+	            if (_this.state.current > result.data.number) {
+	                _this.state.current = result.data.number;
+	            }
 	            //console.log(result.data);
 	        } else {
 	                console.log(result.error);
@@ -22759,26 +22805,53 @@
 
 	    _createClass(Writer, [{
 	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            document.location.hash = '#writer?page=' + this.state.current;
-	        }
+	        value: function componentDidMount() {}
 	    }, {
 	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate() {
-	            document.location.hash = '#writer?page=' + this.state.current;
-	            console.log(document.location.hash);
-	            console.log('writer update');
+	        value: function componentDidUpdate() {}
+	    }, {
+	        key: 'callbackCreateArticle',
+	        value: function callbackCreateArticle() {
+	            var nextPage = {};
+	            nextPage.main = 'editor';
+	            nextPage.page = 0;
+	            nextPage.from = {};
+	            nextPage.from.main = 'writer';
+	            nextPage.from.page = this.state.current;
+	            this.props.callbackParent(nextPage);
+	        }
+	    }, {
+	        key: 'callbackEditArticle',
+	        value: function callbackEditArticle(article_id) {
+	            var nextPage = {};
+	            nextPage.main = 'editor';
+	            nextPage.page = article_id;
+	            nextPage.from = {};
+	            nextPage.from.main = 'writer';
+	            nextPage.from.page = this.state.current;
+	            this.props.callbackParent(nextPage);
+	        }
+	    }, {
+	        key: 'callbackDeleteArticle',
+	        value: function callbackDeleteArticle() {
+	            this.onPageChange(this.state.current);
 	        }
 	    }, {
 	        key: 'onPageChange',
 	        value: function onPageChange(currentPage) {
+	            if (currentPage > this.state.number) {
+	                currentPage = this.state.number;
+	            }
 	            this.setState({ current: currentPage }, function () {
 	                var result = ajaxGetWithToken('user/article/' + currentPage);
-	                document.location.hash = '#writer?page=' + this.state.current;
 	                if (result.success) {
 	                    this.setState({
 	                        list: result.data.list,
 	                        number: result.data.number
+	                    }, function () {
+	                        if (this.state.current > this.state.number) {
+	                            this.onPageChange(this.state.number);
+	                        }
 	                    });
 	                    console.log(result.data);
 	                } else {
@@ -22797,7 +22870,7 @@
 	                returnArr.push(_react2.default.createElement(
 	                    'li',
 	                    { key: title.id },
-	                    _react2.default.createElement(_mtitle2.default, { title: title, from: 'writer', page: this.state.current, total: this.state.number })
+	                    _react2.default.createElement(_mtitle2.default, { title: title, from: 'writer', page: this.state.current, total: this.state.number, callbackParentEdit: this.callbackEditArticle, callbackParentDelete: this.callbackDeleteArticle })
 	                ));
 	            }
 	            return _react2.default.createElement(
@@ -22812,11 +22885,14 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'box-header' },
-	                            _react2.default.createElement('i', { className: 'ion ion-clipboard' }),
 	                            _react2.default.createElement(
-	                                'h3',
-	                                { className: 'box-title' },
-	                                'Writer'
+	                                'div',
+	                                { className: 'pull-left' },
+	                                _react2.default.createElement(
+	                                    'button',
+	                                    { className: 'btn btn-sm btn-success pull-left', onClick: this.callbackCreateArticle },
+	                                    _react2.default.createElement('i', { className: 'fa fa-plus' })
+	                                )
 	                            ),
 	                            _react2.default.createElement(
 	                                'div',
@@ -22856,6 +22932,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactModal = __webpack_require__(161);
+
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22872,19 +22952,56 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MTitle).call(this, props));
 
-	        _this.handleClick = _this.handleClick.bind(_this);
+	        _this.state = {};
+	        _this.state.isDeleting = false;
+	        _this.state.isDeleted = false;
+	        _this.editArticle = _this.editArticle.bind(_this);
+	        _this.deleteArticle = _this.deleteArticle.bind(_this);
+	        _this.openDeleteBox = _this.openDeleteBox.bind(_this);
+	        _this.closeDeleteBox = _this.closeDeleteBox.bind(_this);
+	        _this.openCallbackDeleteBox = _this.openCallbackDeleteBox.bind(_this);
+	        _this.closeCallbackDeleteBox = _this.closeCallbackDeleteBox.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(MTitle, [{
-	        key: 'handleClick',
-	        value: function handleClick(e) {
-	            if (e.target.name == 'user') {
-	                console.log('user');
+	        key: 'editArticle',
+	        value: function editArticle() {
+	            this.props.callbackParentEdit(this.props.title.id);
+	        }
+	    }, {
+	        key: 'deleteArticle',
+	        value: function deleteArticle() {
+	            this.closeDeleteBox();
+	            var result = ajaxGetWithToken('article/' + this.props.title.id + '/delete');
+	            console.log(result);
+	            if (result.success) {
+	                this.openCallbackDeleteBox();
 	            } else {
-	                console.log('article');
-	                document.location.hash = '#article?article=' + this.props.title.id + '&from=' + this.props.from + '&page=' + this.props.page + '&total=' + this.props.total;
+	                console.log(result.error);
+	                this.closeDeleteBox();
 	            }
+	        }
+	    }, {
+	        key: 'openDeleteBox',
+	        value: function openDeleteBox() {
+	            this.setState({ isDeleting: true });
+	        }
+	    }, {
+	        key: 'closeDeleteBox',
+	        value: function closeDeleteBox() {
+	            this.setState({ isDeleting: false });
+	        }
+	    }, {
+	        key: 'openCallbackDeleteBox',
+	        value: function openCallbackDeleteBox() {
+	            this.setState({ isDeleted: true });
+	        }
+	    }, {
+	        key: 'closeCallbackDeleteBox',
+	        value: function closeCallbackDeleteBox() {
+	            this.setState({ isDeleted: false });
+	            this.props.callbackParentDelete();
 	        }
 	    }, {
 	        key: 'render',
@@ -22892,27 +23009,113 @@
 	            var title = this.props.title;
 	            var date = new Date(title.created_at * 1000);
 	            var dateString = date.toString();
+	            var bg = title.is_published ? 'success' : 'default';
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'item', onClick: this.handleClick },
-	                _react2.default.createElement('img', { src: this.props.title.avatar, name: 'user', alt: 'user image', className: 'online', onClick: this.handleClick }),
+	                { className: 'item' },
 	                _react2.default.createElement(
-	                    'p',
-	                    { className: 'message' },
+	                    'div',
+	                    { className: 'col-xs-10', name: 'article', onClick: this.editArticle },
 	                    _react2.default.createElement(
-	                        'a',
-	                        { href: '#', className: 'name' },
+	                        'p',
+	                        { className: 'message' },
 	                        _react2.default.createElement(
 	                            'small',
 	                            { className: 'text-muted pull-right' },
 	                            dateString
 	                        ),
-	                        this.props.title.username
+	                        _react2.default.createElement('br', null),
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            this.props.title.title
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-xs-2' },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn pull-right', name: 'delete_button', onClick: this.openDeleteBox },
+	                        _react2.default.createElement('i', { className: 'fa fa-trash' })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isDeleting, onRequestClose: this.closeDeleteBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
 	                    ),
 	                    _react2.default.createElement(
-	                        'b',
-	                        null,
-	                        this.props.title.title
+	                        'div',
+	                        { className: 'modal-body' },
+	                        'Are you sure to delete',
+	                        _react2.default.createElement('br', null),
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            this.props.title.title,
+	                            ' ?'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-default btn-block btn-flat', onClick: this.closeDeleteBox },
+	                                'No'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.deleteArticle },
+	                                'Yes'
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isDeleted, onRequestClose: this.closeCallbackDeleteBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            this.props.title.title
+	                        ),
+	                        ' is successfully deleted!'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6 pull-right' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.closeCallbackDeleteBox },
+	                                'Yes'
+	                            )
+	                        )
 	                    )
 	                )
 	            );
@@ -22921,6 +23124,19 @@
 
 	    return MTitle;
 	}(_react2.default.Component);
+
+	var customStyles = {
+	    content: {
+	        top: '50%',
+	        left: '50%',
+	        right: '30%',
+	        bottom: 'auto',
+	        marginRight: '-50%',
+	        transform: 'translate(-50%, -50%)'
+
+	    }
+
+	};
 
 	exports.default = MTitle;
 
@@ -23230,8 +23446,23 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Editor).call(this, props));
 
 	        _this.state = {};
-	        _this.state.article = _this.props.article;
+	        _this.state.id = _this.props.page;
 	        _this.handleChange = _this.handleChange.bind(_this);
+	        _this.back = _this.back.bind(_this);
+	        _this.submit = _this.submit.bind(_this);
+
+	        if (_this.state == 1) {
+	            _this.state.title = '';
+	            _this.state.content = '';
+	        } else {
+	            var result = ajaxGet('article/' + _this.state.id);
+	            if (result.success) {
+	                _this.state.title = result.data.title;
+	                _this.state.content = result.data.content;
+	            } else {
+	                console.log(result.error);
+	            }
+	        }
 	        return _this;
 	    }
 
@@ -23242,10 +23473,48 @@
 	        }
 	    }, {
 	        key: 'handleChange',
-	        value: function handleChange() {}
+	        value: function handleChange(e) {
+	            var nextState = {};
+	            nextState[e.target.name] = e.target.value;
+	            this.setState(nextState, function () {
+	                console.log(this.state);
+	            });
+	        }
+	    }, {
+	        key: 'back',
+	        value: function back() {
+	            var nextPage = {};
+	            nextPage.main = this.props.from.main;
+	            nextPage.page = this.props.from.page;
+	            nextPage.from = {};
+	            nextPage.from.main = 'editor';
+	            nextPage.from.page = this.props.page;
+	            this.props.callbackParent(nextPage);
+	        }
 	    }, {
 	        key: 'submit',
-	        value: function submit() {}
+	        value: function submit() {
+	            var title = this.state.title;
+	            var content = $('.textarea').val();
+	            var data = {};
+	            data.title = title;
+	            data.content = content;
+	            if (this.state.id == 0) {
+	                var result = ajaxPostWithToken('article', data);
+	                if (result.success) {
+	                    this.back();
+	                } else {
+	                    console.log(result.error);
+	                }
+	            } else {
+	                var result = ajaxPutWithToken('article/' + this.state.id, data);
+	                if (result.success) {
+	                    this.back();
+	                } else {
+	                    console.log(result.error);
+	                }
+	            }
+	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
@@ -23258,7 +23527,24 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'box' },
-	                        _react2.default.createElement('div', { className: 'box-header' }),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'box-header' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'row' },
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'col-xs-6' },
+	                                    _react2.default.createElement(
+	                                        'button',
+	                                        { type: 'button', className: 'btn btn-success btn pull-left', onClick: this.back },
+	                                        _react2.default.createElement('i', { className: 'fa fa-arrow-left' }),
+	                                        'Back'
+	                                    )
+	                                )
+	                            )
+	                        ),
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'box-body pad' },
@@ -23268,7 +23554,7 @@
 	                                _react2.default.createElement(
 	                                    'div',
 	                                    { className: 'col-xs-12' },
-	                                    _react2.default.createElement('input', { className: 'form-control', placeholder: 'title' })
+	                                    _react2.default.createElement('input', { className: 'form-control', placeholder: 'title', name: 'title', value: this.state.title, onChange: this.handleChange })
 	                                )
 	                            ),
 	                            _react2.default.createElement(
@@ -23277,7 +23563,7 @@
 	                                _react2.default.createElement(
 	                                    'form',
 	                                    { className: 'col-xs-12' },
-	                                    _react2.default.createElement('textarea', { className: 'textarea', placeholder: 'Place some text here', style: { 'width': '100%', 'height': '200px', 'fontSize': '14px', 'lineHeight': '18px', 'border': '1px solid #dddddd', 'padding': '10px' } })
+	                                    _react2.default.createElement('textarea', { name: 'content', className: 'textarea', placeholder: 'Place some text here', style: { 'width': '100%', 'height': '200px', 'fontSize': '14px', 'lineHeight': '18px', 'border': '1px solid #dddddd', 'padding': '10px' }, value: this.state.content, onChange: this.handleChange })
 	                                )
 	                            ),
 	                            _react2.default.createElement(
@@ -23288,7 +23574,7 @@
 	                                    { className: 'col-xs-6' },
 	                                    _react2.default.createElement(
 	                                        'button',
-	                                        { type: 'button', className: 'btn btn-default btn pull-left' },
+	                                        { type: 'button', className: 'btn btn-default btn pull-left', onClick: this.back },
 	                                        _react2.default.createElement('i', { className: 'fa fa-times' }),
 	                                        'Cancel'
 	                                    )
@@ -23298,9 +23584,9 @@
 	                                    { className: 'col-xs-6' },
 	                                    _react2.default.createElement(
 	                                        'button',
-	                                        { type: 'button', className: 'btn btn-success btn pull-right' },
+	                                        { type: 'button', className: 'btn btn-success btn pull-right', onClick: this.submit },
 	                                        _react2.default.createElement('i', { className: 'fa fa-check' }),
-	                                        'Save'
+	                                        'Submit'
 	                                    )
 	                                )
 	                            )
@@ -23357,25 +23643,53 @@
 	    _createClass(ArticleReader, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
+	            console.log('found article');
 	            var article_id = this.props.article;
 	            var result = ajaxGet('article/' + article_id);
 	            if (result.success) {
-	                this.setState({ title: result.data.title, content: result.data.content, username: result.data.username });
+	                this.setState({ title: result.data.title, content: result.data.content, username: result.data.username, created_at: result.data.created_at });
 	            }
+	            $('.textarea').wysihtml5({
+	                toolbar: false,
+	                events: {
+	                    'load': function load() {
+	                        console.log('wysihtml5 loaded');
+	                        $('.wysihtml5-sandbox').contents().find('body').attr('contenteditable', false);
+	                    }
+	                }
+	            });
+	            var editor = $('.textarea').data('wysihtml5').editor;
+	            editor.composer.disable();
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            //$('.wysihtml5-toolbar').hide();       
+	            console.log('article updated');
 	        }
 	    }, {
 	        key: 'handleChange',
 	        value: function handleChange() {}
 	    }, {
+	        key: 'handleClick',
+	        value: function handleClick() {}
+	    }, {
 	        key: 'back',
 	        value: function back() {
-	            var newHash = '#' + this.props.from + '?page=' + this.props.page;
-	            console.log(newHash);
-	            document.location.hash = newHash;
+	            var nextPage = {};
+	            nextPage.main = this.props.from.main;
+	            nextPage.page = this.props.from.page;
+	            nextPage.from = {};
+	            nextPage.from.main = 'article';
+	            nextPage.from.page = this.props.page;
+	            this.props.callbackParent(nextPage);
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var date = new Date(this.state.created_at * 1000);
+	            var dateString = date.toString();
+	            var avatar = '../../../bower_components/AdminLTE/dist/img/user4-128x128.jpg';
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'row' },
@@ -23408,23 +23722,29 @@
 	                            { className: 'box-body pad' },
 	                            _react2.default.createElement(
 	                                'div',
-	                                { className: 'row' },
+	                                { className: 'row chat' },
 	                                _react2.default.createElement(
 	                                    'div',
-	                                    { className: 'col-xs-12' },
-	                                    _react2.default.createElement('input', { className: 'form-control', value: this.state.title, onChange: this.handleChange, placeholder: 'title' })
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'div',
-	                                { className: 'row' },
-	                                _react2.default.createElement(
-	                                    'div',
-	                                    { className: 'col-xs-12' },
+	                                    { className: 'item' },
+	                                    _react2.default.createElement('img', { src: avatar, name: 'user', alt: 'user image', className: 'online', onClick: this.handleClick }),
 	                                    _react2.default.createElement(
-	                                        'label',
-	                                        { className: 'control-label' },
-	                                        this.state.username
+	                                        'p',
+	                                        { className: 'message' },
+	                                        _react2.default.createElement(
+	                                            'a',
+	                                            { href: '#', className: 'name' },
+	                                            _react2.default.createElement(
+	                                                'small',
+	                                                { className: 'text-muted pull-right' },
+	                                                dateString
+	                                            ),
+	                                            this.state.username
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'b',
+	                                            null,
+	                                            this.state.title
+	                                        )
 	                                    )
 	                                )
 	                            ),
@@ -23448,6 +23768,331 @@
 	}(_react2.default.Component);
 
 	exports.default = ArticleReader;
+
+/***/ },
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pagination = __webpack_require__(185);
+
+	var _pagination2 = _interopRequireDefault(_pagination);
+
+	var _reactModal = __webpack_require__(161);
+
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var UserList = function (_React$Component) {
+	    _inherits(UserList, _React$Component);
+
+	    function UserList(props) {
+	        _classCallCheck(this, UserList);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UserList).call(this, props));
+
+	        _this.state = {};
+	        _this.state.list = [];
+	        _this.state.number = 0;
+	        _this.state.isSetting = false;
+	        _this.state.setUserID = 0;
+	        _this.roleID = 0;
+	        _this.roleIDOrigin = 0;
+	        _this.state.isAllowed = true;
+	        _this.state.user = _this.props.user;
+	        _this.state.current = _this.props.page;
+	        _this.onPageChange = _this.onPageChange.bind(_this);
+
+	        var result = ajaxGetWithToken('admin/user/list/' + _this.state.current);
+	        if (result.success) {
+	            _this.state.list = result.data.list;
+	            _this.state.number = result.data.number;
+	            console.log(result.data);
+	        } else {
+	            console.log(result.error);
+	        }
+	        _this.openModal = _this.openModal.bind(_this);
+	        _this.closeModal = _this.closeModal.bind(_this);
+
+	        result = ajaxGetWithToken('admin/role/list');
+	        if (result.success) {
+	            _this.state.settingList = result.data;
+	        } else {
+	            console.log(result.error);
+	        }
+	        _this.getSettingList = _this.getSettingList.bind(_this);
+	        _this.roleChange = _this.roleChange.bind(_this);
+	        _this.submitModal = _this.submitModal.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(UserList, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {}
+	    }, {
+	        key: 'openModal',
+	        value: function openModal(user) {
+	            var isAllowed = user.id == this.state.user.id ? false : true;
+	            console.log(isAllowed);
+	            this.setState({
+	                isSetting: true,
+	                setUserID: user.id,
+	                roleID: user.role_id,
+	                roleIDOrigin: user.role_id,
+	                isAllowed: isAllowed
+	            });
+	        }
+	    }, {
+	        key: 'getSettingList',
+	        value: function getSettingList() {
+	            if (this.state.isAllowed) {
+	                var options = [];
+	                var list = this.state.settingList;
+	                for (var i = 0; i < list.length; i++) {
+	                    options.push(_react2.default.createElement(
+	                        'div',
+	                        { className: 'radio', key: list[i].id },
+	                        _react2.default.createElement('input', { type: 'radio', name: 'role', id: 'role_item_' + list[i].id, value: list[i].id, checked: this.state.roleID == list[i].id, onChange: this.roleChange.bind(this, list[i].id) }),
+	                        _react2.default.createElement(
+	                            'label',
+	                            { htmlFor: 'role_item_' + list[i].id },
+	                            list[i].name
+	                        )
+	                    ));
+	                }
+	                return _react2.default.createElement(
+	                    'form',
+	                    { role: 'form' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'form-group' },
+	                        options
+	                    )
+	                );
+	            } else {
+	                return _react2.default.createElement(
+	                    'b',
+	                    null,
+	                    'Your are not allowed to manage your own role!'
+	                );
+	            }
+	        }
+	    }, {
+	        key: 'roleChange',
+	        value: function roleChange(role_id) {
+	            this.setState({ roleID: role_id });
+	        }
+	    }, {
+	        key: 'closeModal',
+	        value: function closeModal() {
+	            this.setState({
+	                isSetting: false,
+	                roleID: this.state.roleIDOrigin
+	            });
+	        }
+	    }, {
+	        key: 'submitModal',
+	        value: function submitModal() {
+	            if (this.state.roleID == this.state.roleIDOrigin) {
+	                this.setState({ isSetting: false });
+	            } else {
+	                var data = {};
+	                data.role_id = this.state.roleID;
+	                var result = ajaxPutWithToken('admin/role/' + this.state.setUserID, data);
+	                console.log(result);
+	                if (result.success && result.data.result) {
+	                    this.onPageChange(this.state.current);
+	                } else {
+	                    this.onPageChange(this.state.current);
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'onPageChange',
+	        value: function onPageChange(currentPage) {
+	            this.setState({ current: currentPage }, function () {
+	                var result = ajaxGetWithToken('admin/user/list/' + currentPage);
+	                if (result.success) {
+	                    this.setState({
+	                        list: result.data.list,
+	                        number: result.data.number,
+	                        isSetting: false
+	                    });
+	                    console.log(result.data);
+	                } else {
+	                    console.log(result.error);
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'getContent',
+	        value: function getContent() {
+	            var user_list = this.state.list;
+	            var avatar = '../../../bower_components/AdminLTE/dist/img/user4-128x128.jpg';
+	            var user_data = [];
+	            for (var i = 0; i < user_list.length; i++) {
+	                user_data.push(_react2.default.createElement(
+	                    'li',
+	                    { key: user_list[i].id },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'item', onClick: this.openModal.bind(this, user_list[i]), name: user_list[i].id },
+	                        _react2.default.createElement('img', { src: avatar, alt: 'user image', className: 'online' }),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-4 pull-right' },
+	                            _react2.default.createElement(
+	                                'p',
+	                                { className: 'message' },
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    'rele:'
+	                                ),
+	                                _react2.default.createElement('br', null),
+	                                user_list[i].role_name
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-4 pull-right' },
+	                            _react2.default.createElement(
+	                                'p',
+	                                { className: 'message' },
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    'name:'
+	                                ),
+	                                _react2.default.createElement('br', null),
+	                                user_list[i].name
+	                            )
+	                        )
+	                    )
+	                ));
+	            }
+	            return user_data;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                    'section',
+	                    { className: 'col-lg-12' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'box box-primary' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'box-header' },
+	                            _react2.default.createElement('i', { className: 'ion ion-clipboard' }),
+	                            _react2.default.createElement(
+	                                'h3',
+	                                { className: 'box-title' },
+	                                'User List'
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'box-tools pull-right' },
+	                                _react2.default.createElement(_pagination2.default, { current: this.state.current, total: this.state.number, callbackParent: this.onPageChange })
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'box-body chat' },
+	                            this.getContent()
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isSetting, onRequestClose: this.closeModal, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        'Choose a role for this user:',
+	                        _react2.default.createElement('br', null),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'row' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'col-xs-12' },
+	                                this.getSettingList()
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-default btn-block btn-flat', onClick: this.closeModal },
+	                                'Cancel'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.submitModal },
+	                                'Save'
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return UserList;
+	}(_react2.default.Component);
+
+	var customStyles = {
+	    content: {
+	        top: '50%',
+	        left: '50%',
+	        right: '30%',
+	        bottom: 'auto',
+	        marginRight: '-50%',
+	        transform: 'translate(-50%, -50%)'
+
+	    }
+
+	};
+
+	exports.default = UserList;
 
 /***/ }
 /******/ ]);

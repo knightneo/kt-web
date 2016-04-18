@@ -8,7 +8,9 @@ class UserHeader extends React.Component {
         this.state.token = this.props.token;
         this.logout = this.logout.bind(this);
         this.getProfile = this.getProfile.bind(this);
-        this.state.user = this.getProfile();
+        var profile = this.getProfile();
+        this.state.user = profile.user;
+        this.props.callbackParent(profile);
     }
 
     logout() {
@@ -20,7 +22,7 @@ class UserHeader extends React.Component {
         var result = ajaxGetWithToken('profile');
         if (result.success) {
             console.log(result.data);
-            return result.data.user;
+            return result.data;
         } else {
             console.log(result.error);
             deleteTokenFromCookie();

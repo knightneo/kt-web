@@ -4,20 +4,62 @@ class LeftSide extends React.Component {
 
     constructor(props) {
         super(props);
-        this.closeSideBar = this.closeSideBar.bind(this);
+        this.state = {};
+        this.state.current = this.props.current;
+        this.onMainChange = this.onMainChange.bind(this);
     }
 
-    closeSideBar() {
+    onMainChange(e) {
+        var nextPage = {};
+        nextPage.main = 'home';
+        nextPage.page = 1;
+        switch (e.target.name) {
+            case 'home':
+                nextPage.main = 'home';
+                break;
+            case 'writer':
+                nextPage.main = 'writer';
+                break;
+            case 'user_list':
+                nextPage.main = 'user_list';
+                break;
+            default:
+                nextPage.main = 'home';
+        }
+        this.setState({current: nextPage}, function () {
+            this.props.callbackParent(this.state.current);
+        });
         $('body').removeClass('sidebar-open');
     }
 
     render() {
+        var permissions = this.props.permissions;
+        var items = [];
+        for (var i=0; i<permissions.length; i++) {
+            switch (permissions[i]) {
+                case 'read' :
+                    items.push(
+                        <li key={i}><a name="read" className="ajax-link" onClick={this.onMainChange}>Home</a></li>
+                    );
+                    break;
+                case 'write' :
+                    items.push(
+                        <li key={i}><a name="writer" className="ajax-link" onClick={this.onMainChange}>MyArticle</a></li>
+                    );
+                    break;
+                case 'user' :
+                    items.push(
+                        <li key={i}><a name="user_list" className="ajax-link" onClick={this.onMainChange}>User List</a></li>
+                    );
+                    break;
+                default:
+            }
+        }
         return (
             <aside className="main-sidebar">
                 <section className="sidebar">
                     <ul className="sidebar-menu">
-                        <li><a className="ajax-link" href="#home" onClick={this.closeSideBar}>home</a></li>
-                        <li><a className="ajax-link" href="#writer" onClick={this.closeSideBar}>writer</a></li>
+                        {items}
                     </ul>
                 </section>
             </aside>

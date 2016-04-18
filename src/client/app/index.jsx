@@ -8,12 +8,18 @@ import Like from './like.jsx';
 import Login from './login.jsx';
 import Editor from './editor.jsx';
 import ArticleReader from './article_reader.jsx';
+import UserList from './user_list.jsx';
 
 class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {};
+        this.state.main = 'home';
+        this.state.page = 1;
+        this.state.user = {};
+        this.state.role = 'reader';
+        this.state.permissions = ['read'];
         var token = getTokenFromCookie();
         if (token == '') {
             this.state.isLogin = false;
@@ -21,58 +27,67 @@ class App extends React.Component {
             this.state.isLogin = true;
             this.state.access_token = token;
         }
+        this.onMainChange = this.onMainChange.bind(this);
         this.getContent = this.getContent.bind(this);
+        this.setProfile = this.setProfile.bind(this);
+    }
+
+    componentDidUpdate() {
+    }
+
+    setProfile(profile) {
+        if (this.state.isLogin) {
+            var permissions = [];
+            for(var i=0; i<profile.permission.length; i++){
+                permissions.push(profile.permission[i].permission_name);
+            }
+            this.setState({
+                user:profile.user,
+                role:profile.role.name,
+                permissions:permissions
+            }, function (){
+                console.log(this.state);
+            });
+        }
+    }
+
+    onMainChange(nextPage) {
+        console.log(nextPage);
+        this.setState(nextPage, function() {
+            console.log(this.state);
+        });
     }
 
     getContent() {
-        switch (this.state.url) {
+        console.log(this.state);
+        switch (this.state.main) {
             case '':
                 console.log(this.state);
             case 'home':
-                console.log('found home');
-                var page = 1;
-                if (this.state.data.page != undefined) {
-                    page = this.state.data.page;
-                }
-                return (<Home page={page} />);
-            case 'like':
-                return (<Like />);
-            case 'writer':
-                var page = 1;
-                console.log('found writer');
-                if (this.state.data.page != undefined) {
-                    page = this.state.data.page;
-                }
-                return (<Writer page={page} />);
-            case 'editor':
-                return (<Editor />);
+                return (<Home page={this.state.page} callbackParent={this.onMainChange} />);
             case 'article':
-                var article_id = this.state.data.article;
-                var from = this.state.data.from;
-                var page = this.state.data.page;
-                return (<ArticleReader article={article_id} from={from} page={page}/>);
+                var article_id = this.state.page;
+                var from = this.state.from;
+                return (<ArticleReader article={article_id} from={from} callbackParent={this.onMainChange} />);
+            case 'writer':
+                return (<Writer page={this.state.page} callbackParent={this.onMainChange} />);
+            case 'editor':
+                var article_id = this.state.page;
+                var from = this.state.from;
+                return (<Editor page={this.state.page} from={from} callbackParent={this.onMainChange} />);
+            case 'user_list':
+                return (<UserList page={this.state.page} user = {this.state.user} />);
             default:
-                return (<Home />);
-        }
-    }
-
-    jump(url, data, open_new) {
-        var hash = url + '?';
-        for (var key in data) {
-            hash += (hash == url + '?' ? '' : '&') + key + '=' + data[key];
-        }
-        if (open_new) {
-            window.open('/react/#' + hash);
-        } else {
-            this.setState({url: url,data: data}, function(){document.location.hash = hash;});
+                return (<Home page={this.state.page} />);
         }
     }
 
     render() {
+        console.log(this.state);
         return (
             <div className="hold-trasition skin-blue sidebar-mini">
-                <Header isLogin={this.state.isLogin} token={this.state.isLogin? this.state.access_token : ''} />
-                <LeftSide />
+                <Header isLogin={this.state.isLogin} token={this.state.isLogin? this.state.access_token : ''} callbackParent={this.setProfile} />
+                <LeftSide current={{main:this.state.main}} callbackParent={this.onMainChange} permissions={this.state.permissions} />
                 <div className="content-wrapper">
                     <section className="content" id="content">
                         {this.getContent()}
@@ -85,20 +100,3 @@ class App extends React.Component {
 }
 
 var AppDom = render(<App/>, document.getElementById('app'));
-
-
-window.addEventListener('hashchange', function (e) {
-    if (AppDom.state.url != location.hash.substr(1).split('?')[0]) {
-        var url = location.hash.split('?')[0].substring(1);
-        var params = location.hash.split('?')[1] ? location.hash.split('?')[1].split('&') : null;
-        var data = {};
-        for (var i in params) {
-            data[params[i].split('=')[0]] = params[i].split('=')[1];
-        }
-        AppDom.setState({
-            url: url,
-            data: data
-        })
-
-    }
-}.bind(this));

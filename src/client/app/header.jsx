@@ -7,19 +7,24 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
         this.userInfo = this.userInfo.bind(this);
-    };
+        this.callbackParent = this.callbackParent.bind(this);
+    }
+
+    callbackParent(profile) {
+        this.props.callbackParent(profile);
+    }
 
     userInfo() {
         if (this.props.isLogin) {
             return (
-                <UserHeader token={this.props.token}/>
+                <UserHeader token={this.props.token} callbackParent={this.callbackParent} />
             );
         }else {
             return (
                 <GuestHeader />
             );
         }
-    };
+    }
     
     render() {
         return (

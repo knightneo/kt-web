@@ -11,8 +11,8 @@ class Title extends React.Component {
         if (e.target.name == 'user') {
             console.log('user');
         } else {
+            this.props.callbackParent(this.props.title.id);
             console.log('article');
-            document.location.hash = '#article?article=' + this.props.title.id + '&from=' + this.props.from + '&page=' + this.props.page + '&total=' + this.props.total;
         }
     }
 

@@ -9,13 +9,10 @@ class Home extends React.Component {
         this.state = {};
         this.state.list = [];
         this.state.number = 0;
-        if (this.props.page == undefined) {
-            this.state.current = 1;
-        } else {
-            this.state.current = this.props.page;
-        }
+        this.state.current = this.props.page;
         this.onPageChange = this.onPageChange.bind(this);
-        
+        this.openArticle = this.openArticle.bind(this);
+
         var result = ajaxGet('home/article_list/'+this.state.current);
         if (result.success) {
             this.state.list = result.data.list;
@@ -28,20 +25,24 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        document.location.hash = '#home?page=' + this.state.current;
-        console.log('home mount');
     }
 
     componentDidUpdate() {
-        document.location.hash = '#home?page=' + this.state.current;
-        console.log(document.location.hash);
-        console.log('home update');
+    }
+
+    openArticle(article_id) {
+        var nextPage = {};
+        nextPage.main = 'article';
+        nextPage.page = article_id;
+        nextPage.from = {};
+        nextPage.from.main = 'home';
+        nextPage.from.page = this.state.current;
+        this.props.callbackParent(nextPage);
     }
 
     onPageChange(currentPage) {
         this.setState({current:currentPage}, function () {
             var result = ajaxGet('home/article_list/' + currentPage);
-            document.location.hash = '#home?page=' + this.state.current;
             if (result.success) {
                 this.setState({
                     list:result.data.list,
@@ -49,7 +50,7 @@ class Home extends React.Component {
                 });
                 console.log(result.data);
             } else {
-                //console.log(result.error);
+                console.log(result.error);
             }
         });
     }
@@ -62,7 +63,7 @@ class Home extends React.Component {
             title.avatar = '../../../bower_components/AdminLTE/dist/img/user4-128x128.jpg';
             returnArr.push(
                 <li key={title.id}>
-                    <Title title={title} from={'home'} page={this.state.current} total={this.state.number} />
+                    <Title title={title} from={'home'} page={this.state.current} total={this.state.number} callbackParent={this.openArticle} />
                 </li>
             );
         }

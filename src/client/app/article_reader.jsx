@@ -10,24 +10,52 @@ class ArticleReader extends React.Component {
     }
 
     componentDidMount() {
+        console.log('found article');
         var article_id = this.props.article;
         var result = ajaxGet('article/' + article_id);
         if (result.success) {
-            this.setState({title:result.data.title, content:result.data.content, username:result.data.username});
+            this.setState({title:result.data.title, content:result.data.content, username:result.data.username, created_at:result.data.created_at});
         }
+        $('.textarea').wysihtml5({
+            toolbar : false,
+            events : {
+                'load' : function () {
+                    console.log('wysihtml5 loaded');
+                    $('.wysihtml5-sandbox').contents().find('body').attr('contenteditable',false);
+                }
+            }
+        });
+        var editor = $('.textarea').data('wysihtml5').editor;
+        editor.composer.disable();
+    }
+
+    componentDidUpdate() {
+        //$('.wysihtml5-toolbar').hide();        
+        console.log('article updated');
     }
 
     handleChange() {
 
     }
 
+    handleClick() {
+        
+    }
+
     back() {
-        var newHash='#' + this.props.from + '?page=' + this.props.page;
-        console.log(newHash);
-        document.location.hash = newHash;
+        var nextPage = {}
+        nextPage.main = this.props.from.main;
+        nextPage.page = this.props.from.page;
+        nextPage.from = {};
+        nextPage.from.main = 'article';
+        nextPage.from.page = this.props.page;
+        this.props.callbackParent(nextPage);
     }
 
     render() {
+        var date = new Date(this.state.created_at * 1000);
+        var dateString = date.toString();
+        var avatar = '../../../bower_components/AdminLTE/dist/img/user4-128x128.jpg';
         return (
             <div className="row">
                 <section className="col-lg-12">
@@ -42,14 +70,16 @@ class ArticleReader extends React.Component {
                             </div>
                         </div>
                         <div className="box-body pad">
-                            <div className="row">
-                                <div className="col-xs-12">
-                                    <input className="form-control" value={this.state.title} onChange={this.handleChange} placeholder="title" />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-xs-12">
-                                    <label className="control-label">{this.state.username}</label>
+                            <div className="row chat">
+                                <div className="item">
+                                    <img src={avatar} name='user' alt="user image" className="online" onClick={this.handleClick} />
+                                    <p className="message">
+                                        <a href="#" className="name">
+                                            <small className="text-muted pull-right">{dateString}</small>
+                                            {this.state.username}
+                                        </a>
+                                        <b>{this.state.title}</b>
+                                    </p>
                                 </div>
                             </div>
                             <div className="row">
