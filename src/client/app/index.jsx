@@ -9,6 +9,7 @@ import Login from './login.jsx';
 import Editor from './editor.jsx';
 import ArticleReader from './article_reader.jsx';
 import UserList from './user_list.jsx';
+import ResetPassword from './reset_password.jsx';
 
 class App extends React.Component {
 
@@ -77,6 +78,8 @@ class App extends React.Component {
                 return (<Editor page={this.state.page} from={from} callbackParent={this.onMainChange} />);
             case 'user_list':
                 return (<UserList page={this.state.page} user = {this.state.user} />);
+            case 'reset_password':
+                return (<ResetPassword />);
             default:
                 return (<Home page={this.state.page} />);
         }

@@ -90,6 +90,10 @@
 
 	var _user_list2 = _interopRequireDefault(_user_list);
 
+	var _reset_password = __webpack_require__(193);
+
+	var _reset_password2 = _interopRequireDefault(_reset_password);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -174,6 +178,8 @@
 	                    return _react2.default.createElement(_editor2.default, { page: this.state.page, from: from, callbackParent: this.onMainChange });
 	                case 'user_list':
 	                    return _react2.default.createElement(_user_list2.default, { page: this.state.page, user: this.state.user });
+	                case 'reset_password':
+	                    return _react2.default.createElement(_reset_password2.default, null);
 	                default:
 	                    return _react2.default.createElement(_home2.default, { page: this.state.page });
 	            }
@@ -19965,25 +19971,85 @@
 
 	        _this.state = {
 	            isLoginOpen: false,
+	            isRegisterOpen: false,
+	            isAlertOpen: false,
+	            alertCloseOpen: '',
 	            email: '',
-	            password: ''
+	            password: '',
+	            alertMsg: '',
+	            register_name: '',
+	            register_email: '',
+	            register_password: '',
+	            register_password_retype: ''
 	        };
 	        _this.openLoginBox = _this.openLoginBox.bind(_this);
 	        _this.closeLoginBox = _this.closeLoginBox.bind(_this);
+	        _this.openRegisterBox = _this.openRegisterBox.bind(_this);
+	        _this.closeRegisterBox = _this.closeRegisterBox.bind(_this);
+	        _this.openAlertBox = _this.openAlertBox.bind(_this);
+	        _this.closeAlertBox = _this.closeAlertBox.bind(_this);
 	        _this.handleChange = _this.handleChange.bind(_this);
 	        _this.login = _this.login.bind(_this);
+	        _this.register = _this.register.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(GuestHeader, [{
 	        key: 'openLoginBox',
 	        value: function openLoginBox() {
-	            this.setState({ isLoginOpen: true });
+	            this.setState({
+	                isLoginOpen: true,
+	                isRegisterOpen: false,
+	                isAlertOpen: false
+	            });
 	        }
 	    }, {
 	        key: 'closeLoginBox',
 	        value: function closeLoginBox() {
-	            this.setState({ isLoginOpen: false });
+	            this.setState({
+	                isLoginOpen: false,
+	                isRegisterOpen: false,
+	                isAlertOpen: false
+	            });
+	        }
+	    }, {
+	        key: 'openRegisterBox',
+	        value: function openRegisterBox() {
+	            this.setState({
+	                isLoginOpen: false,
+	                isRegisterOpen: true,
+	                isAlertOpen: false
+	            });
+	        }
+	    }, {
+	        key: 'closeRegisterBox',
+	        value: function closeRegisterBox() {
+	            this.setState({
+	                isLoginOpen: false,
+	                isRegisterOpen: false,
+	                isAlertOpen: false
+	            });
+	        }
+	    }, {
+	        key: 'openAlertBox',
+	        value: function openAlertBox(msg) {
+	            this.setState({
+	                isLoginOpen: false,
+	                isRegisterOpen: false,
+	                isAlertOpen: true,
+	                alertMsg: msg
+	            });
+	        }
+	    }, {
+	        key: 'closeAlertBox',
+	        value: function closeAlertBox() {
+	            this.setState({
+	                isLoginOpen: this.state.alertCloseOpen == 'login' ? true : false,
+	                isRegisterOpen: this.state.alertCloseOpen == 'register' ? true : false,
+	                isAlertOpen: false,
+	                alertMsg: '',
+	                alertCloseOpen: ''
+	            });
 	        }
 	    }, {
 	        key: 'handleChange',
@@ -20003,10 +20069,61 @@
 	            var result = ajaxPost('signin', credentials);
 	            if (result.success) {
 	                storeTokenIntoCookie(result.data.token);
+	                location.reload();
 	            } else {
 	                console.log(result.error);
+	                this.openAlertBox('Wrong email or password!');
+	                this.setState({ alertCloseOpen: 'login' });
 	            }
-	            location.reload();
+	        }
+	    }, {
+	        key: 'register',
+	        value: function register() {
+	            var name = this.state.register_name;
+	            var email = this.state.register_email;
+	            var password = this.state.register_password;
+	            var password_retype = this.state.register_password_retype;
+	            if (name.length == 0) {
+	                this.openAlertBox('Name must not be empty!');
+	                this.setState({ alertCloseOpen: 'register' });
+	            } else if (email.length == 0) {
+	                this.openAlertBox('Email must not be empty!');
+	                this.setState({ alertCloseOpen: 'register' });
+	            } else if (password.length == 0) {
+	                this.openAlertBox('Password must not be empty!');
+	                this.setState({ alertCloseOpen: 'register' });
+	            } else if (password_retype.length == 0) {
+	                this.openAlertBox('Password retype must not be empty!');
+	                this.setState({ alertCloseOpen: 'register' });
+	            } else if (password != password_retype) {
+	                this.openAlertBox('different password');
+	                this.setState({ alertCloseOpen: 'register' });
+	            } else {
+	                var data = {};
+	                data.email = email;
+	                data.name = name;
+	                data.password = password;
+	                var result = ajaxPost('check/email/available', data);
+	                if (result.success && result.data.result) {
+	                    var innerResult = ajaxPost('signup', data);
+	                    console.log(innerResult);
+	                    if (innerResult.success && innerResult.data.result) {
+	                        this.openAlertBox('You have signed up successfully, please sign in!');
+	                        this.setState({ alertCloseOpen: 'login' });
+	                    } else {
+	                        this.openAlertBox('Register failed, please try again');
+	                        this.setState({ alertCloseOpen: 'register' });
+	                    }
+	                } else if (result.success && !result.data.result) {
+	                    this.openAlertBox('This email has already been signed up, please try another!');
+	                    this.setState({ alertCloseOpen: 'register' });
+	                } else {
+	                    this.openAlertBox('Register failed, please try again');
+	                    this.setState({ alertCloseOpen: 'register' });
+	                    console.log(result.error);
+	                }
+	                //location.reload();
+	            }
 	        }
 	    }, {
 	        key: 'render',
@@ -20057,7 +20174,7 @@
 	                                { className: 'pull-right' },
 	                                _react2.default.createElement(
 	                                    'a',
-	                                    { href: '#', className: 'btn btn-default btn-flat' },
+	                                    { href: '#', className: 'btn btn-default btn-flat', onClick: this.openRegisterBox },
 	                                    'Sign Up'
 	                                )
 	                            )
@@ -20080,13 +20197,9 @@
 	                                    'div',
 	                                    { className: 'login-logo' },
 	                                    _react2.default.createElement(
-	                                        'a',
-	                                        { href: '/react/' },
-	                                        _react2.default.createElement(
-	                                            'b',
-	                                            null,
-	                                            'KT'
-	                                        )
+	                                        'b',
+	                                        null,
+	                                        'KT'
 	                                    )
 	                                ),
 	                                _react2.default.createElement(
@@ -20136,6 +20249,126 @@
 	                                        )
 	                                    )
 	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isRegisterOpen, onRequestClose: this.closeRegisterBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'row' },
+	                        _react2.default.createElement(
+	                            'section',
+	                            { className: 'col-lg-12' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'register-box' },
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'box-header' },
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'register-logo' },
+	                                        _react2.default.createElement(
+	                                            'b',
+	                                            null,
+	                                            'KT'
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        { className: 'login-box-msg' },
+	                                        'Sign Up'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group has-feedback' },
+	                                        _react2.default.createElement('input', { name: 'register_name', type: 'text', className: 'form-control', placeholder: 'name', onChange: this.handleChange }),
+	                                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-user form-control-feedback' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group has-feedback' },
+	                                        _react2.default.createElement('input', { name: 'register_email', type: 'email', className: 'form-control', placeholder: 'Email', onChange: this.handleChange }),
+	                                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-envelope form-control-feedback' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group has-feedback' },
+	                                        _react2.default.createElement('input', { name: 'register_password', type: 'password', className: 'form-control', placeholder: 'Password', onChange: this.handleChange }),
+	                                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-lock form-control-feedback' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group has-feedback' },
+	                                        _react2.default.createElement('input', { name: 'register_password_retype', type: 'password', className: 'form-control', placeholder: 'Retype password', onChange: this.handleChange }),
+	                                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-log-in form-control-feedback' })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group has-feedback' },
+	                                        _react2.default.createElement(
+	                                            'div',
+	                                            { className: 'col-xs-6' },
+	                                            _react2.default.createElement(
+	                                                'button',
+	                                                { className: 'btn btn-default btn-block btn-flat', onClick: this.closeRegisterBox },
+	                                                'Cancel'
+	                                            )
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'div',
+	                                            { className: 'col-xs-6' },
+	                                            _react2.default.createElement(
+	                                                'button',
+	                                                { type: 'submit', className: 'btn btn-success btn-block btn-flat', onClick: this.register },
+	                                                'Sign Up'
+	                                            )
+	                                        )
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isAlertOpen, onRequestClose: this.closeAlertBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'row' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'col-xs-12' },
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    this.state.alertMsg
+	                                )
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6 pull-right' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.closeAlertBox },
+	                                'OK'
 	                            )
 	                        )
 	                    )
@@ -22279,6 +22512,9 @@
 	                case 'user_list':
 	                    nextPage.main = 'user_list';
 	                    break;
+	                case 'reset_password':
+	                    nextPage.main = 'reset_password';
+	                    break;
 	                default:
 	                    nextPage.main = 'home';
 	            }
@@ -22312,7 +22548,7 @@
 	                            _react2.default.createElement(
 	                                'a',
 	                                { name: 'writer', className: 'ajax-link', onClick: this.onMainChange },
-	                                'MyArticle'
+	                                'My Article'
 	                            )
 	                        ));
 	                        break;
@@ -22324,6 +22560,17 @@
 	                                'a',
 	                                { name: 'user_list', className: 'ajax-link', onClick: this.onMainChange },
 	                                'User List'
+	                            )
+	                        ));
+	                        break;
+	                    case 'password':
+	                        items.push(_react2.default.createElement(
+	                            'li',
+	                            { key: i },
+	                            _react2.default.createElement(
+	                                'a',
+	                                { name: 'reset_password', className: 'ajax-link', onClick: this.onMainChange },
+	                                'Reset Password'
 	                            )
 	                        ));
 	                        break;
@@ -24093,6 +24340,243 @@
 	};
 
 	exports.default = UserList;
+
+/***/ },
+/* 193 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactModal = __webpack_require__(161);
+
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ResetPassword = function (_React$Component) {
+	    _inherits(ResetPassword, _React$Component);
+
+	    function ResetPassword(props) {
+	        _classCallCheck(this, ResetPassword);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ResetPassword).call(this, props));
+
+	        _this.state = {};
+	        _this.state.email = '';
+	        _this.state.password = '';
+	        _this.state.isAlertOpen = false;
+	        _this.state.alertMsg = '';
+	        _this.handleChange = _this.handleChange.bind(_this);
+	        _this.reset = _this.reset.bind(_this);
+	        _this.submit = _this.submit.bind(_this);
+	        _this.openAlertBox = _this.openAlertBox.bind(_this);
+	        _this.closeAlertBox = _this.closeAlertBox.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(ResetPassword, [{
+	        key: 'handleChange',
+	        value: function handleChange(e) {
+	            var nextState = {};
+	            nextState[e.target.name] = e.target.value;
+	            this.setState(nextState);
+	        }
+	    }, {
+	        key: 'reset',
+	        value: function reset() {
+	            this.setState({ email: '', password: '' });
+	        }
+	    }, {
+	        key: 'submit',
+	        value: function submit() {
+	            var data = [];
+	            data['email'] = this.state.email;
+	            data['password'] = this.state.password;
+	            var result = ajaxPostWithToken('admin/user/reset/password', data);
+	            if (result.success && result.data.result) {
+	                openAlertBox('You have reset this user\'s password!');
+	            } else {
+	                openAlertBox('Password reset failed, please retry!');
+	            }
+	        }
+	    }, {
+	        key: 'openAlertBox',
+	        value: function openAlertBox(msg) {
+	            this.setState({
+	                isAlertOpen: true,
+	                alertMsg: msg
+	            });
+	        }
+	    }, {
+	        key: 'closeAlertBox',
+	        value: function closeAlertBox() {
+	            this.setState({
+	                isAlertOpen: false,
+	                alertMsg: ''
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var avatar = '../../../bower_components/AdminLTE/dist/img/user4-128x128.jpg';
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                    'section',
+	                    { className: 'col-lg-12' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'box' },
+	                        _react2.default.createElement('div', { className: 'box-header' }),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'box-body pad' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'row chat' },
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'item' },
+	                                    _react2.default.createElement('img', { src: avatar, name: 'user', alt: 'user image', className: 'online', onClick: this.handleClick }),
+	                                    _react2.default.createElement(
+	                                        'p',
+	                                        { className: 'message' },
+	                                        _react2.default.createElement(
+	                                            'b',
+	                                            null,
+	                                            'Reset Password'
+	                                        )
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'row' },
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'form' },
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'col-xs-12' },
+	                                        _react2.default.createElement('br', null),
+	                                        _react2.default.createElement(
+	                                            'div',
+	                                            { className: 'form-group' },
+	                                            _react2.default.createElement('input', { name: 'email', type: 'text', className: 'form-control', placeholder: 'Email', value: this.state.email, onChange: this.handleChange })
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'div',
+	                                            { className: 'form-group' },
+	                                            _react2.default.createElement('input', { name: 'password', type: 'password', className: 'form-control', placeholder: 'New Password', value: this.state.password, onChange: this.handleChange })
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'div',
+	                                            { className: 'form-group' },
+	                                            _react2.default.createElement(
+	                                                'div',
+	                                                { className: 'col-xs-6' },
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-default', onClick: this.reset },
+	                                                    _react2.default.createElement('i', { className: 'fa fa-refresh' }),
+	                                                    'Reset'
+	                                                )
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'div',
+	                                                { className: 'col-xs-6' },
+	                                                _react2.default.createElement(
+	                                                    'button',
+	                                                    { className: 'btn btn-danger pull-right', onClick: this.submit },
+	                                                    _react2.default.createElement('i', { className: 'fa fa-check' }),
+	                                                    'Submit'
+	                                                )
+	                                            )
+	                                        )
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isAlertOpen, onRequestClose: this.closeAlertBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'row' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'col-xs-12' },
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    this.state.alertMsg
+	                                )
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6 pull-right' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.closeAlertBox },
+	                                'OK'
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ResetPassword;
+	}(_react2.default.Component);
+
+	var customStyles = {
+	    content: {
+	        top: '50%',
+	        left: '50%',
+	        right: '30%',
+	        bottom: 'auto',
+	        marginRight: '-50%',
+	        transform: 'translate(-50%, -50%)'
+
+	    }
+
+	};
+
+	exports.default = ResetPassword;
 
 /***/ }
 /******/ ]);

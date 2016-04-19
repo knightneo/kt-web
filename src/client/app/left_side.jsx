@@ -23,6 +23,9 @@ class LeftSide extends React.Component {
             case 'user_list':
                 nextPage.main = 'user_list';
                 break;
+            case 'reset_password':
+                nextPage.main = 'reset_password';
+                break;
             default:
                 nextPage.main = 'home';
         }
@@ -44,12 +47,17 @@ class LeftSide extends React.Component {
                     break;
                 case 'write' :
                     items.push(
-                        <li key={i}><a name="writer" className="ajax-link" onClick={this.onMainChange}>MyArticle</a></li>
+                        <li key={i}><a name="writer" className="ajax-link" onClick={this.onMainChange}>My Article</a></li>
                     );
                     break;
                 case 'user' :
                     items.push(
                         <li key={i}><a name="user_list" className="ajax-link" onClick={this.onMainChange}>User List</a></li>
+                    );
+                    break;
+                case 'password' :
+                    items.push(
+                        <li key={i}><a name="reset_password" className="ajax-link" onClick={this.onMainChange}>Reset Password</a></li>
                     );
                     break;
                 default:
