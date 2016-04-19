@@ -24405,14 +24405,15 @@
 	    }, {
 	        key: 'submit',
 	        value: function submit() {
-	            var data = [];
-	            data['email'] = this.state.email;
-	            data['password'] = this.state.password;
+	            var data = {};
+	            data.email = this.state.email;
+	            data.password = this.state.password;
+	            console.log(data);
 	            var result = ajaxPostWithToken('admin/user/reset/password', data);
 	            if (result.success && result.data.result) {
-	                openAlertBox('You have reset this user\'s password!');
+	                this.openAlertBox('You have reset this user\'s password!');
 	            } else {
-	                openAlertBox('Password reset failed, please retry!');
+	                this.openAlertBox('Password reset failed, please retry!');
 	            }
 	        }
 	    }, {
