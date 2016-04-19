@@ -22335,6 +22335,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactModal = __webpack_require__(161);
+
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22353,15 +22357,108 @@
 
 	        _this.state = {};
 	        _this.state.token = _this.props.token;
+	        _this.state.isAlertOpen = false;
+	        _this.state.isPasswordOpen = false;
+	        _this.state.alertMsg = '';
+	        _this.state.oldpassword = '';
+	        _this.state.newpassword = '';
+	        _this.state.newpasswordretype = '';
+	        _this.state.alertCloseOpenPassword = false;
 	        _this.logout = _this.logout.bind(_this);
 	        _this.getProfile = _this.getProfile.bind(_this);
 	        var profile = _this.getProfile();
 	        _this.state.user = profile.user;
 	        _this.props.callbackParent(profile);
+	        _this.openAlertBox = _this.openAlertBox.bind(_this);
+	        _this.closeAlertBox = _this.closeAlertBox.bind(_this);
+	        _this.openPasswordBox = _this.openPasswordBox.bind(_this);
+	        _this.closePasswordBox = _this.closePasswordBox.bind(_this);
+	        _this.reset = _this.reset.bind(_this);
+	        _this.handleChange = _this.handleChange.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(UserHeader, [{
+	        key: 'handleChange',
+	        value: function handleChange(e) {
+	            var nextState = {};
+	            nextState[e.target.name] = e.target.value;
+	            this.setState(nextState);
+	        }
+	    }, {
+	        key: 'openPasswordBox',
+	        value: function openPasswordBox() {
+	            this.setState({
+	                isPasswordOpen: true,
+	                isAlertOpen: false
+	            });
+	        }
+	    }, {
+	        key: 'closePasswordBox',
+	        value: function closePasswordBox() {
+	            this.setState({
+	                isPasswordOpen: false,
+	                isAlertOpen: false
+	            });
+	        }
+	    }, {
+	        key: 'openAlertBox',
+	        value: function openAlertBox(msg) {
+	            this.setState({
+	                isPasswordOpen: false,
+	                isAlertOpen: true,
+	                alertMsg: msg
+	            });
+	        }
+	    }, {
+	        key: 'closeAlertBox',
+	        value: function closeAlertBox() {
+	            this.setState({
+	                isPasswordOpen: this.state.alertCloseOpenPassword ? true : false,
+	                isAlertOpen: false,
+	                alertMsg: ''
+	            });
+	        }
+	    }, {
+	        key: 'reset',
+	        value: function reset() {
+	            if (this.state.oldpassword.length == 0) {
+	                this.setState({ alertCloseOpenPassword: true });
+	                this.openAlertBox('Please enter your password!');
+	            } else if (this.state.newpassword.length == 0) {
+	                this.setState({ alertCloseOpenPassword: true });
+	                this.openAlertBox('Please enter your new password!');
+	            } else if (this.state.newpasswordretype.length == 0) {
+	                this.setState({ alertCloseOpenPassword: true });
+	                this.openAlertBox('Please retype your new password!');
+	            } else if (this.state.newpassword == this.state.oldpassword) {
+	                this.setState({ alertCloseOpenPassword: true });
+	                this.openAlertBox('New password must be different from the old one!');
+	            } else if (this.state.newpassword != this.state.newpasswordretype) {
+	                this.setState({ alertCloseOpenPassword: true });
+	                this.openAlertBox('Password retype is different from new password!');
+	            } else {
+	                var credentials = {};
+	                credentials.email = this.state.user.email;
+	                credentials.password = this.state.oldpassword;
+	                var result = ajaxPost('signin', credentials);
+	                if (result.success) {
+	                    storeTokenIntoCookie(result.data.token);
+	                    var innerResult = ajaxPostWithToken('reset/password', { password: this.state.newpassword });
+	                    if (innerResult.success && innerResult.data.result) {
+	                        this.setState({ alertCloseOpenPassword: false });
+	                        this.openAlertBox('You have reset password!');
+	                    } else {
+	                        this.setState({ alertCloseOpenPassword: true });
+	                        this.openAlertBox('Password reset failed, please retry!');
+	                    }
+	                } else {
+	                    this.setState({ alertCloseOpenPassword: true });
+	                    this.openAlertBox('Wrong Password!');
+	                }
+	            }
+	        }
+	    }, {
 	        key: 'logout',
 	        value: function logout() {
 	            deleteTokenFromCookie();
@@ -22424,8 +22521,8 @@
 	                                { className: 'pull-left' },
 	                                _react2.default.createElement(
 	                                    'a',
-	                                    { href: '#', className: 'btn btn-default btn-flat' },
-	                                    'Profile'
+	                                    { href: '#', className: 'btn btn-default btn-flat', onClick: this.openPasswordBox },
+	                                    'Reset Password'
 	                                )
 	                            ),
 	                            _react2.default.createElement(
@@ -22448,6 +22545,109 @@
 	                        { href: '#', 'data-toggle': 'control-sidebar' },
 	                        _react2.default.createElement('i', { className: 'fa fa-gears' })
 	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isPasswordOpen, onRequestClose: this.closePasswordBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'row' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'col-xs-12' },
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { className: 'form' },
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement('input', { type: 'password', className: 'form-control', placeholder: 'Password', name: 'oldpassword', value: this.state.oldpassword, onChange: this.handleChange })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement('input', { type: 'password', className: 'form-control', placeholder: 'New Password', name: 'newpassword', value: this.state.newpassword, onChange: this.handleChange })
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'div',
+	                                        { className: 'form-group' },
+	                                        _react2.default.createElement('input', { type: 'password', className: 'form-control', placeholder: 'Retype New Password', name: 'newpasswordretype', value: this.state.newpasswordretype, onChange: this.handleChange })
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-default btn-block btn-flat', onClick: this.closePasswordBox },
+	                                'Cancel'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6 pull-right' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.reset },
+	                                'Submit'
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _reactModal2.default,
+	                    { isOpen: this.state.isAlertOpen, onRequestClose: this.closeAlertBox, style: customStyles },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-header' },
+	                        _react2.default.createElement('i', { className: 'fa fa-cog' }),
+	                        ' System Info'
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-body' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'row' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'col-xs-12' },
+	                                _react2.default.createElement(
+	                                    'b',
+	                                    null,
+	                                    this.state.alertMsg
+	                                )
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'modal-footer' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'col-xs-6 pull-right' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-danger btn-block btn-flat', onClick: this.closeAlertBox },
+	                                'OK'
+	                            )
+	                        )
+	                    )
 	                )
 	            );
 	        }
@@ -22455,6 +22655,19 @@
 
 	    return UserHeader;
 	}(_react2.default.Component);
+
+	var customStyles = {
+	    content: {
+	        top: '50%',
+	        left: '50%',
+	        right: '30%',
+	        bottom: 'auto',
+	        marginRight: '-50%',
+	        transform: 'translate(-50%, -50%)'
+
+	    }
+
+	};
 
 	exports.default = UserHeader;
 
