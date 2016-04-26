@@ -22474,6 +22474,7 @@
 	            } else {
 	                console.log(result.error);
 	                deleteTokenFromCookie();
+	                location.reload();
 	            }
 	        }
 	    }, {

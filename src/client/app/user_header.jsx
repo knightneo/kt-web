@@ -115,6 +115,7 @@ class UserHeader extends React.Component {
         } else {
             console.log(result.error);
             deleteTokenFromCookie();
+            location.reload();
         }
     }
 
