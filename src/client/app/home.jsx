@@ -73,7 +73,7 @@ class Home extends React.Component {
                     <div className="box box-primary">
                         <div className="box-header">
                             <i className="ion ion-clipboard"></i>
-                            <h3 className="box-title">Home</h3>
+                            <h3 className="box-title">{HOME_PAGE}</h3>
                             <div className="box-tools pull-right">
                                 <Pagination current={this.state.current} total={this.state.number} callbackParent={this.onPageChange} />
                             </div>

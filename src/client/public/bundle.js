@@ -19891,7 +19891,7 @@
 	                        _react2.default.createElement(
 	                            'b',
 	                            null,
-	                            'KT'
+	                            APP_NAME
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -19900,7 +19900,7 @@
 	                        _react2.default.createElement(
 	                            'b',
 	                            null,
-	                            'KT'
+	                            APP_NAME
 	                        )
 	                    )
 	                ),
@@ -20154,7 +20154,8 @@
 	                            _react2.default.createElement(
 	                                'p',
 	                                null,
-	                                'Welcome to KT'
+	                                'Welcome to ',
+	                                APP_NAME
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -20199,7 +20200,7 @@
 	                                    _react2.default.createElement(
 	                                        'b',
 	                                        null,
-	                                        'KT'
+	                                        APP_NAME
 	                                    )
 	                                ),
 	                                _react2.default.createElement(
@@ -20274,7 +20275,7 @@
 	                                        _react2.default.createElement(
 	                                            'b',
 	                                            null,
-	                                            'KT'
+	                                            APP_NAME
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
@@ -22751,7 +22752,7 @@
 	                            _react2.default.createElement(
 	                                'a',
 	                                { name: 'read', className: 'ajax-link', onClick: this.onMainChange },
-	                                'Home'
+	                                HOME_PAGE
 	                            )
 	                        ));
 	                        break;
@@ -22762,7 +22763,7 @@
 	                            _react2.default.createElement(
 	                                'a',
 	                                { name: 'writer', className: 'ajax-link', onClick: this.onMainChange },
-	                                'My Article'
+	                                WRITER_PAGE
 	                            )
 	                        ));
 	                        break;
@@ -22773,7 +22774,7 @@
 	                            _react2.default.createElement(
 	                                'a',
 	                                { name: 'user_list', className: 'ajax-link', onClick: this.onMainChange },
-	                                'User List'
+	                                USER_LIST_PAGE
 	                            )
 	                        ));
 	                        break;
@@ -22784,7 +22785,7 @@
 	                            _react2.default.createElement(
 	                                'a',
 	                                { name: 'reset_password', className: 'ajax-link', onClick: this.onMainChange },
-	                                'Reset Password'
+	                                RESET_PASSWORD_PAGE
 	                            )
 	                        ));
 	                        break;
@@ -22934,7 +22935,7 @@
 	                            _react2.default.createElement(
 	                                'h3',
 	                                { className: 'box-title' },
-	                                'Home'
+	                                HOME_PAGE
 	                            ),
 	                            _react2.default.createElement(
 	                                'div',
@@ -24471,7 +24472,7 @@
 	                            _react2.default.createElement(
 	                                'h3',
 	                                { className: 'box-title' },
-	                                'User List'
+	                                USER_LIST_PAGE
 	                            ),
 	                            _react2.default.createElement(
 	                                'div',
@@ -24676,7 +24677,7 @@
 	                                        _react2.default.createElement(
 	                                            'b',
 	                                            null,
-	                                            'Reset Password'
+	                                            RESET_PASSWORD_PAGE
 	                                        )
 	                                    )
 	                                )

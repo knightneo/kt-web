@@ -164,7 +164,7 @@ class GuestHeader extends React.Component {
                             <img src="/bower_components/AdminLTE/dist/img/user2-160x160.jpg" className="img-circle" alt="User Image" />
 
                             <p>
-                                Welcome to KT
+                                Welcome to {APP_NAME}
                             </p>
                         </li>
                         <li className="user-footer">
@@ -182,7 +182,7 @@ class GuestHeader extends React.Component {
                         <section className="col-lg-12">
                             <div className="login-box">
                                 <div className="login-logo">
-                                    <b>KT</b>
+                                    <b>{APP_NAME}</b>
                                 </div>
                                 <div className="login-box-body">
                                     <p>输入用户名和密码登陆</p>
@@ -215,7 +215,7 @@ class GuestHeader extends React.Component {
                             <div className="register-box">
                                 <div className="box-header">
                                     <div className="register-logo">
-                                        <b>KT</b>
+                                        <b>{APP_NAME}</b>
                                     </div>
                                     <p className="login-box-msg">Sign Up</p>
                                     <div className="form-group has-feedback">

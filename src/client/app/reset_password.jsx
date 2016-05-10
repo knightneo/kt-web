@@ -67,7 +67,7 @@ class ResetPassword extends React.Component {
                                 <div className="item">
                                     <img src={avatar} name='user' alt="user image" className="online" onClick={this.handleClick} />
                                     <p className="message">
-                                        <b>Reset Password</b>
+                                        <b>{RESET_PASSWORD_PAGE}</b>
                                     </p>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@ class ResetPassword extends React.Component {
                 </section>
                 <Modal isOpen={this.state.isAlertOpen} onRequestClose={this.closeAlertBox} style={customStyles}>
                     <div className="modal-header">
-                        <i className="fa fa-cog" /> System Info
+                        <i className="fa fa-cog" /> {SYSTEM_INFO}
                     </div>
                     <div className="modal-body">
                         <div className="row">

@@ -42,22 +42,22 @@ class LeftSide extends React.Component {
             switch (permissions[i]) {
                 case 'read' :
                     items.push(
-                        <li key={i}><a name="read" className="ajax-link" onClick={this.onMainChange}>Home</a></li>
+                        <li key={i}><a name="read" className="ajax-link" onClick={this.onMainChange}>{HOME_PAGE}</a></li>
                     );
                     break;
                 case 'write' :
                     items.push(
-                        <li key={i}><a name="writer" className="ajax-link" onClick={this.onMainChange}>My Article</a></li>
+                        <li key={i}><a name="writer" className="ajax-link" onClick={this.onMainChange}>{WRITER_PAGE}</a></li>
                     );
                     break;
                 case 'user' :
                     items.push(
-                        <li key={i}><a name="user_list" className="ajax-link" onClick={this.onMainChange}>User List</a></li>
+                        <li key={i}><a name="user_list" className="ajax-link" onClick={this.onMainChange}>{USER_LIST_PAGE}</a></li>
                     );
                     break;
                 case 'password' :
                     items.push(
-                        <li key={i}><a name="reset_password" className="ajax-link" onClick={this.onMainChange}>Reset Password</a></li>
+                        <li key={i}><a name="reset_password" className="ajax-link" onClick={this.onMainChange}>{RESET_PASSWORD_PAGE}</a></li>
                     );
                     break;
                 default:

@@ -163,7 +163,7 @@ class UserList extends React.Component {
                     <div className="box box-primary">
                         <div className="box-header">
                             <i className="ion ion-clipboard"></i>
-                            <h3 className="box-title">User List</h3>
+                            <h3 className="box-title">{USER_LIST_PAGE}</h3>
                             <div className="box-tools pull-right">
                                 <Pagination current={this.state.current} total={this.state.number} callbackParent={this.onPageChange} />
                             </div>

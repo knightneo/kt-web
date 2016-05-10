@@ -30,8 +30,8 @@ class Header extends React.Component {
         return (
             <header className="main-header">
                 <a href="#" className="logo">
-                    <span className="logo-mini"><b>KT</b></span>
-                    <span className="logo-lg"><b>KT</b></span>
+                    <span className="logo-mini"><b>{APP_NAME}</b></span>
+                    <span className="logo-lg"><b>{APP_NAME}</b></span>
                 </a>
                 <nav className="navbar navbar-static-top" role="navigation">
                     <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
